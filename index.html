@@ -2,2114 +2,1350 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Animal Jump</title>
 
 <style>
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 html,body{
-    margin:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    font-family:Arial,sans-serif;
-    background:#17242b;
+ margin:0;
+ width:100%;
+ height:100%;
+ overflow:hidden;
+ font-family:Arial,sans-serif;
+ background:#18252c;
 }
 
 canvas{
-    display:block;
-    width:100%;
-    height:100%;
+ width:100%;
+ height:100%;
+ display:block;
 }
 
-/* ================= MENU ================= */
-
 #menu{
-    position:fixed;
-    inset:0;
-    z-index:10;
+ position:fixed;
+ inset:0;
+ z-index:10;
+ overflow:auto;
+ padding:20px;
+ text-align:center;
+ color:white;
 
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
+ background:
+ linear-gradient(
+  180deg,
+  rgba(44,157,201,.95),
+  rgba(69,166,91,.95)
+ );
 
-    color:white;
-    text-align:center;
-
-    background:
-    linear-gradient(
-        180deg,
-        rgba(39,153,198,.92),
-        rgba(65,165,91,.92)
-    );
-
-    overflow:auto;
-    padding:20px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
 }
 
 .logo{
-    font-size:58px;
-    font-weight:900;
-
-    text-shadow:
-    4px 4px 0 #31515c;
-
-    margin-bottom:4px;
-}
-
-.description{
-    margin-bottom:14px;
-    font-size:18px;
-}
-
-label{
-    font-size:18px;
-    font-weight:bold;
+ font-size:55px;
+ font-weight:900;
+ text-shadow:4px 4px #34535d;
+ margin:5px 0;
 }
 
 #playerName{
-    width:310px;
-    max-width:90vw;
-
-    margin:7px 0 12px;
-
-    padding:12px 16px;
-
-    border:3px solid white;
-    border-radius:14px;
-
-    outline:none;
-
-    text-align:center;
-
-    font-size:18px;
-    font-weight:bold;
+ width:300px;
+ padding:12px;
+ border-radius:14px;
+ border:3px solid white;
+ outline:none;
+ text-align:center;
+ font-size:18px;
+ font-weight:bold;
+ margin:8px;
 }
 
 .title{
-    margin:8px 0;
-    font-size:20px;
-    font-weight:bold;
+ font-size:20px;
+ font-weight:bold;
+ margin:8px;
 }
 
 .animals{
-    display:grid;
-
-    grid-template-columns:
-    repeat(4,120px);
-
-    gap:10px;
-
-    justify-content:center;
+ width:min(760px,95vw);
+ display:grid;
+ grid-template-columns:repeat(5,1fr);
+ gap:8px;
 }
 
 .choice{
-    min-height:76px;
-
-    border:3px solid rgba(255,255,255,.9);
-    border-radius:16px;
-
-    background:rgba(255,255,255,.16);
-
-    color:white;
-
-    font-size:16px;
-    font-weight:bold;
-
-    cursor:pointer;
-
-    transition:.15s;
+ min-height:67px;
+ border:3px solid white;
+ border-radius:14px;
+ background:rgba(255,255,255,.16);
+ color:white;
+ cursor:pointer;
+ font-weight:bold;
 }
 
 .choice:hover{
-    transform:translateY(-3px);
+ transform:scale(1.04);
 }
 
 .choice.selected{
-    background:#ffd447;
-    color:#332b13;
-
-    box-shadow:
-    0 5px 0 rgba(90,60,0,.3);
+ background:#ffd447;
+ color:#332600;
 }
 
 .icon{
-    display:block;
-    font-size:30px;
-    margin-bottom:3px;
+ display:block;
+ font-size:27px;
 }
 
 .modes{
-    display:flex;
-    gap:10px;
-    margin-top:4px;
+ display:flex;
+ gap:8px;
 }
 
 .mode{
-    width:105px;
-    min-height:50px;
+ width:100px;
 }
 
 #start{
-    margin-top:20px;
-
-    padding:15px 48px;
-
-    border:0;
-    border-radius:17px;
-
-    background:#ffbd2f;
-    color:#382700;
-
-    font-size:23px;
-    font-weight:900;
-
-    cursor:pointer;
-
-    box-shadow:
-    0 6px 0 #a96e08;
+ margin:18px;
+ padding:14px 45px;
+ border:0;
+ border-radius:16px;
+ background:#ffc332;
+ color:#3c2c00;
+ font-size:22px;
+ font-weight:900;
+ cursor:pointer;
+ box-shadow:0 6px #a36d08;
 }
 
-#start:active{
-    transform:translateY(5px);
-    box-shadow:
-    0 1px 0 #a96e08;
-}
+#music{
+ position:fixed;
+ right:15px;
+ top:15px;
+ z-index:30;
 
-/* ================= SCORE ================= */
+ padding:10px 15px;
+ border:0;
+ border-radius:12px;
+
+ background:white;
+ font-weight:bold;
+ cursor:pointer;
+}
 
 #score{
-    position:fixed;
-    top:12px;
-    left:50%;
+ position:fixed;
+ top:10px;
+ left:50%;
+ transform:translateX(-50%);
+ z-index:5;
 
-    transform:translateX(-50%);
+ color:white;
+ font-size:38px;
+ font-weight:900;
 
-    z-index:5;
-
-    color:white;
-
-    font-size:38px;
-    font-weight:900;
-
-    text-shadow:
-    3px 3px 0 #273b43;
+ text-shadow:3px 3px #263b43;
 }
 
 #playerLabel{
-    position:fixed;
-    top:57px;
-    left:50%;
+ position:fixed;
+ top:58px;
+ left:50%;
+ transform:translateX(-50%);
+ z-index:5;
 
-    transform:translateX(-50%);
-
-    z-index:5;
-
-    color:white;
-
-    font-size:16px;
-    font-weight:bold;
-
-    text-shadow:
-    2px 2px 0 #273b43;
+ color:white;
+ font-weight:bold;
+ text-shadow:2px 2px #263b43;
 }
 
-/* ================= GAME OVER ================= */
-
 #over{
-    position:fixed;
-    inset:0;
+ position:fixed;
+ inset:0;
+ z-index:20;
+ display:none;
 
-    z-index:20;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
 
-    display:none;
-
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-
-    color:white;
-    text-align:center;
-
-    background:rgba(20,30,35,.63);
+ background:rgba(0,0,0,.6);
+ color:white;
+ text-align:center;
 }
 
 #over h1{
-    margin:0;
-
-    font-size:62px;
-
-    text-shadow:
-    4px 4px 0 #26343a;
-}
-
-#result{
-    margin:10px 0;
-    font-size:23px;
+ font-size:60px;
+ margin:0;
 }
 
 #again{
-    margin-top:14px;
-
-    padding:14px 40px;
-
-    border:0;
-    border-radius:15px;
-
-    background:#ffd447;
-
-    color:#302500;
-
-    font-size:20px;
-    font-weight:bold;
-
-    cursor:pointer;
+ padding:13px 38px;
+ border:0;
+ border-radius:14px;
+ background:#ffd447;
+ font-size:20px;
+ font-weight:bold;
+ cursor:pointer;
 }
 
-/* ================= MOBILE ================= */
+@media(max-width:700px){
 
-@media(max-width:650px){
+ .animals{
+  grid-template-columns:repeat(4,1fr);
+ }
 
-    .logo{
-        font-size:42px;
-    }
+ .logo{
+  font-size:40px;
+ }
 
-    .animals{
-        grid-template-columns:
-        repeat(4,78px);
-        gap:7px;
-    }
+ .choice{
+  font-size:11px;
+ }
 
-    .choice{
-        min-height:65px;
-        font-size:12px;
-    }
-
-    .icon{
-        font-size:25px;
-    }
-
-    .modes{
-        gap:6px;
-    }
-
-    .mode{
-        width:90px;
-    }
-
-    #start{
-        padding:13px 35px;
-    }
+ .icon{
+  font-size:23px;
+ }
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= MENU ================= -->
+<button id="music">🔇 Nhạc: Tắt</button>
 
 <div id="menu">
 
-    <div class="logo">
-        ANIMAL JUMP
-    </div>
+<div class="logo">🐾 ANIMAL JUMP</div>
 
-    <div class="description">
-        Vượt qua các cây cột và lập kỷ lục!
-    </div>
+<div>Vượt qua cột và lập kỷ lục!</div>
 
-    <label for="playerName">
-        Nhập tên của bạn
-    </label>
+<input
+ id="playerName"
+ maxlength="16"
+ placeholder="Nhập tên của bạn"
+>
 
-    <input
-        id="playerName"
-        type="text"
-        maxlength="16"
-        placeholder="Ví dụ: BaoLam"
-        autocomplete="off"
-    >
+<div class="title">🐾 Chọn con vật</div>
 
-    <div class="title">
-        🐾 Chọn con vật
-    </div>
+<div class="animals" id="animals"></div>
 
-    <div class="animals">
+<div class="title">⚡ Độ khó</div>
 
-        <button class="choice animal selected"
-                data-animal="duck">
-            <span class="icon">🦆</span>
-            Vịt
-        </button>
+<div class="modes">
 
-        <button class="choice animal"
-                data-animal="cat">
-            <span class="icon">🐱</span>
-            Mèo
-        </button>
+<button class="choice mode selected" data-mode="easy">
+🟢 DỄ
+</button>
 
-        <button class="choice animal"
-                data-animal="rabbit">
-            <span class="icon">🐰</span>
-            Thỏ
-        </button>
+<button class="choice mode" data-mode="normal">
+🟡 VỪA
+</button>
 
-        <button class="choice animal"
-                data-animal="frog">
-            <span class="icon">🐸</span>
-            Ếch
-        </button>
-
-        <button class="choice animal"
-                data-animal="panda">
-            <span class="icon">🐼</span>
-            Gấu trúc
-        </button>
-
-        <button class="choice animal"
-                data-animal="fox">
-            <span class="icon">🦊</span>
-            Cáo
-        </button>
-
-        <button class="choice animal"
-                data-animal="bee">
-            <span class="icon">🐝</span>
-            Ong
-        </button>
-
-        <button class="choice animal"
-                data-animal="penguin">
-            <span class="icon">🐧</span>
-            Chim cánh cụt
-        </button>
-
-    </div>
-
-    <div class="title">
-        ⚡ Chọn độ khó
-    </div>
-
-    <div class="modes">
-
-        <button class="choice mode selected"
-                data-mode="easy">
-            🟢 DỄ
-        </button>
-
-        <button class="choice mode"
-                data-mode="normal">
-            🟡 VỪA
-        </button>
-
-        <button class="choice mode"
-                data-mode="hard">
-            🔴 KHÓ
-        </button>
-
-    </div>
-
-    <button id="start">
-        ▶ BẮT ĐẦU CHƠI
-    </button>
+<button class="choice mode" data-mode="hard">
+🔴 KHÓ
+</button>
 
 </div>
 
+<button id="start">▶ BẮT ĐẦU CHƠI</button>
 
-<!-- ================= GAME UI ================= -->
+</div>
 
 <div id="score">0</div>
 
 <div id="playerLabel"></div>
 
-
-<!-- ================= GAME OVER ================= -->
-
 <div id="over">
 
-    <h1>GAME OVER</h1>
+<h1>GAME OVER</h1>
 
-    <div id="result"></div>
+<div id="result"></div>
 
-    <button id="again">
-        🔄 VỀ MENU
-    </button>
+<br>
+
+<button id="again">🔄 VỀ MENU</button>
 
 </div>
 
-
 <canvas id="game"></canvas>
-
 
 <script>
 
-/* =================================================
-   CANVAS
-================================================= */
+/* =========================================
+  40 CON VẬT
+========================================= */
 
-const canvas =
+const animals=[
+
+["duck","🦆","Vịt"],
+["cat","🐱","Mèo"],
+["dog","🐶","Chó"],
+["rabbit","🐰","Thỏ"],
+["frog","🐸","Ếch"],
+["panda","🐼","Gấu trúc"],
+["fox","🦊","Cáo"],
+["bee","🐝","Ong"],
+["penguin","🐧","Cánh cụt"],
+["bear","🐻","Gấu"],
+
+["koala","🐨","Koala"],
+["tiger","🐯","Hổ"],
+["lion","🦁","Sư tử"],
+["cow","🐮","Bò"],
+["pig","🐷","Heo"],
+["mouse","🐭","Chuột"],
+["hamster","🐹","Hamster"],
+["monkey","🐵","Khỉ"],
+["chicken","🐔","Gà"],
+["chick","🐤","Gà con"],
+
+["bird","🐦","Chim"],
+["owl","🦉","Cú"],
+["parrot","🦜","Vẹt"],
+["swan","🦢","Thiên nga"],
+["eagle","🦅","Đại bàng"],
+["turkey","🦃","Gà tây"],
+["horse","🐴","Ngựa"],
+["unicorn","🦄","Kỳ lân"],
+["llama","🦙","Lạc đà"],
+["camel","🐫","Lạc đà"],
+
+["elephant","🐘","Voi"],
+["giraffe","🦒","Hươu cao cổ"],
+["zebra","🦓","Ngựa vằn"],
+["deer","🦌","Nai"],
+["boar","🐗","Lợn rừng"],
+["goat","🐐","Dê"],
+["sheep","🐑","Cừu"],
+["wolf","🐺","Sói"],
+["dragon","🐲","Rồng"],
+["dinosaur","🦖","Khủng long"]
+
+];
+
+
+/* =========================================
+  TẠO MENU CON VẬT
+========================================= */
+
+const animalBox=
+document.getElementById("animals");
+
+animals.forEach((a,i)=>{
+
+ const button=
+ document.createElement("button");
+
+ button.className=
+ "choice animal";
+
+ if(i===0)
+ button.classList.add("selected");
+
+ button.dataset.animal=
+ a[0];
+
+ button.innerHTML=
+ `<span class="icon">${a[1]}</span>${a[2]}`;
+
+ animalBox.appendChild(button);
+
+});
+
+
+let animal="duck";
+let mode="easy";
+let playerName="Người chơi";
+
+
+/* =========================================
+  CANVAS
+========================================= */
+
+const canvas=
 document.getElementById("game");
 
-const ctx =
+const ctx=
 canvas.getContext("2d");
-
 
 function resize(){
 
-    canvas.width =
-    window.innerWidth;
+ canvas.width=
+ innerWidth;
 
-    canvas.height =
-    window.innerHeight;
+ canvas.height=
+ innerHeight;
 }
 
 resize();
 
-window.addEventListener(
-    "resize",
-    resize
+addEventListener(
+ "resize",
+ resize
 );
 
 
-/* =================================================
-   MENU
-================================================= */
+/* =========================================
+  ĐỘ KHÓ
+========================================= */
 
-const menu =
-document.getElementById("menu");
+const difficulty={
 
-const over =
-document.getElementById("over");
+ easy:{
+  speed:3.4,
+  gap:215,
+  spawn:2050
+ },
 
-const scoreText =
-document.getElementById("score");
+ normal:{
+  speed:4.3,
+  gap:190,
+  spawn:1750
+ },
 
-const playerLabel =
-document.getElementById("playerLabel");
-
-const result =
-document.getElementById("result");
-
-const nameInput =
-document.getElementById("playerName");
-
-
-let animal =
-"duck";
-
-let mode =
-"easy";
-
-let playerName =
-"Người chơi";
-
-
-/* =================================================
-   ĐỘ KHÓ
-================================================= */
-
-const difficulty = {
-
-    easy:{
-        speed:3.2,
-        gap:235,
-        spawn:2050
-    },
-
-    normal:{
-        speed:4.3,
-        gap:200,
-        spawn:1750
-    },
-
-    hard:{
-        speed:5.6,
-        gap:170,
-        spawn:1500
-    }
+ hard:{
+  speed:5.3,
+  gap:170,
+  spawn:1500
+ }
 
 };
 
 
-/* =================================================
-   CHỌN CON VẬT
-================================================= */
+/* =========================================
+  CHỌN CON VẬT
+========================================= */
 
 document
 .querySelectorAll(".animal")
-.forEach(button=>{
+.forEach(b=>{
 
-    button.onclick=()=>{
+ b.onclick=()=>{
 
-        document
-        .querySelectorAll(".animal")
-        .forEach(b=>
-            b.classList.remove("selected")
-        );
+  document
+  .querySelectorAll(".animal")
+  .forEach(x=>
+   x.classList.remove("selected")
+  );
 
-        button.classList.add("selected");
+  b.classList.add("selected");
 
-        animal =
-        button.dataset.animal;
+  animal=
+  b.dataset.animal;
 
-    };
+ };
 
 });
 
 
-/* =================================================
-   CHỌN ĐỘ KHÓ
-================================================= */
+/* =========================================
+  CHỌN ĐỘ KHÓ
+========================================= */
 
 document
 .querySelectorAll(".mode")
-.forEach(button=>{
+.forEach(b=>{
 
-    button.onclick=()=>{
+ b.onclick=()=>{
 
-        document
-        .querySelectorAll(".mode")
-        .forEach(b=>
-            b.classList.remove("selected")
-        );
+  document
+  .querySelectorAll(".mode")
+  .forEach(x=>
+   x.classList.remove("selected")
+  );
 
-        button.classList.add("selected");
+  b.classList.add("selected");
 
-        mode =
-        button.dataset.mode;
+  mode=
+  b.dataset.mode;
 
-    };
+ };
 
 });
 
 
-/* =================================================
-   GAME VARIABLES
-================================================= */
+/* =========================================
+  GAME
+========================================= */
 
-let playing =
-false;
+let playing=false;
+let dead=false;
 
-let dead =
-false;
+let score=0;
 
-let score =
-0;
+let pipes=[];
 
-let pipes =
-[];
+let lastPipe=0;
 
-let lastPipe =
-0;
-
-
-/* =================================================
-   KỶ LỤC
-================================================= */
-
-let best =
+let best=
 Number(
-    localStorage.getItem(
-        "animalJumpBest"
-    )
-) || 0;
+ localStorage.getItem(
+  "animalJumpBest"
+ )
+)||0;
 
 
-/* =================================================
-   PLAYER
-================================================= */
+const player={
 
-const player = {
+ x:170,
+ y:300,
 
-    x:170,
+ w:55,
+ h:45,
 
-    y:300,
-
-    w:58,
-
-    h:48,
-
-    vy:0
+ vy:0
 
 };
 
-const gravity =
-0.50;
 
-const jumpPower =
--9;
+const gravity=.50;
+const jumpPower=-9;
 
 
-/* =================================================
-   START GAME
-================================================= */
+/* =========================================
+  NHẠC BẰNG JAVASCRIPT
+========================================= */
+
+let audio=null;
+let musicOn=false;
+let musicTimer=null;
+
+const musicButton=
+document.getElementById("music");
+
+
+function startMusic(){
+
+ if(musicOn)
+ return;
+
+ audio=
+ new AudioContext();
+
+ musicOn=true;
+
+ musicButton.textContent=
+ "🔊 Nhạc: Bật";
+
+ playMelody();
+
+}
+
+
+function playMelody(){
+
+ if(!musicOn)
+ return;
+
+ const notes=[
+  261.63,
+  329.63,
+  392,
+  329.63,
+  293.66,
+  349.23,
+  440,
+  392
+ ];
+
+ let i=0;
+
+ function note(){
+
+  if(!musicOn)
+  return;
+
+  const osc=
+  audio.createOscillator();
+
+  const gain=
+  audio.createGain();
+
+  osc.frequency.value=
+  notes[i];
+
+  osc.type=
+  "sine";
+
+  gain.gain.value=
+  .035;
+
+  osc.connect(gain);
+
+  gain.connect(
+   audio.destination
+  );
+
+  osc.start();
+
+  osc.stop(
+   audio.currentTime+.18
+  );
+
+  i=
+  (i+1)%notes.length;
+
+  musicTimer=
+  setTimeout(
+   note,
+   230
+  );
+
+ }
+
+ note();
+
+}
+
+
+function stopMusic(){
+
+ musicOn=false;
+
+ if(musicTimer)
+ clearTimeout(musicTimer);
+
+ if(audio)
+ audio.close();
+
+ musicButton.textContent=
+ "🔇 Nhạc: Tắt";
+
+}
+
+
+musicButton.onclick=()=>{
+
+ if(musicOn)
+ stopMusic();
+
+ else
+ startMusic();
+
+};
+
+
+/* =========================================
+  BẮT ĐẦU
+========================================= */
 
 document
 .getElementById("start")
-.onclick =
-startGame;
+.onclick=()=>{
+
+ playerName=
+ document
+ .getElementById("playerName")
+ .value
+ .trim();
+
+ if(!playerName)
+ playerName="Người chơi";
 
 
-function startGame(){
+ /* trình duyệt cho phép nhạc
+    sau khi người dùng bấm */
 
-    playerName =
-    nameInput.value.trim();
-
-    if(!playerName){
-
-        playerName =
-        "Người chơi";
-
-    }
+ if(!musicOn)
+ startMusic();
 
 
-    playing =
-    true;
+ playing=true;
+ dead=false;
 
-    dead =
-    false;
+ score=0;
 
-    score =
-    0;
+ pipes=[];
 
-    pipes =
-    [];
+ player.y=
+ canvas.height/2;
 
-    player.x =
-    170;
+ player.vy=0;
 
-    player.y =
-    canvas.height / 2;
+ lastPipe=
+ performance.now();
 
-    player.vy =
-    0;
+ document
+ .getElementById("score")
+ .textContent="0";
 
-    lastPipe =
-    performance.now();
+ document
+ .getElementById("playerLabel")
+ .textContent=
+ "👤 "+playerName;
 
-    scoreText.textContent =
-    "0";
+ document
+ .getElementById("menu")
+ .style.display="none";
 
-    playerLabel.textContent =
-    "👤 " + playerName;
+ document
+ .getElementById("over")
+ .style.display="none";
 
-    menu.style.display =
-    "none";
-
-    over.style.display =
-    "none";
-
-}
+};
 
 
-/* =================================================
-   JUMP
-================================================= */
+/* =========================================
+  NHẢY
+========================================= */
 
 function jump(){
 
-    if(
-        !playing ||
-        dead
-    ) return;
+ if(!playing || dead)
+ return;
 
-    player.vy =
-    jumpPower;
+ player.vy=
+ jumpPower;
 
 }
 
+addEventListener(
+ "keydown",
+ e=>{
 
-/* =================================================
-   SPACE
-================================================= */
+  if(e.code==="Space"){
 
-window.addEventListener(
-    "keydown",
-    e=>{
+   e.preventDefault();
 
-        if(
-            e.code === "Space"
-        ){
+   jump();
 
-            e.preventDefault();
+  }
 
-            jump();
-
-        }
-
-    }
+ }
 );
-
-
-/* =================================================
-   CLICK / TOUCH
-================================================= */
 
 canvas.addEventListener(
-    "pointerdown",
-    jump
+ "pointerdown",
+ jump
 );
 
 
-/* =================================================
-   CREATE PIPE
-================================================= */
+/* =========================================
+  TẠO CỘT
+========================================= */
 
 function createPipe(){
 
-    const d =
-    difficulty[mode];
+ const d=
+ difficulty[mode];
 
-    const ground =
-    canvas.height - 65;
+ const ground=
+ canvas.height-65;
 
+ /*
+   Khe được giới hạn để:
+   - Không quá lớn
+   - Không quá nhỏ
+ */
 
-    /*
-      Giữ khoảng cách an toàn
-      giữa trần và mặt đất.
-    */
+ const topMin=100;
 
-    const minTop =
-    90;
+ const topMax=
+ Math.max(
+  topMin,
+  ground-d.gap-100
+ );
 
-    const maxTop =
-    Math.max(
-        minTop,
-        ground -
-        d.gap -
-        90
-    );
-
-
-    const top =
-    minTop +
-    Math.random() *
-    (maxTop-minTop);
+ const top=
+ topMin+
+ Math.random()*
+ (topMax-topMin);
 
 
-    pipes.push({
+ pipes.push({
 
-        x:
-        canvas.width + 100,
+  x:
+  canvas.width+100,
 
-        w:
-        92,
+  w:86,
 
-        top:
-        top,
+  top:top,
 
-        bottom:
-        top + d.gap,
+  bottom:
+  top+d.gap,
 
-        passed:
-        false
+  passed:false
 
-    });
+ });
 
 }
 
 
-/* =================================================
-   UPDATE
-================================================= */
+/* =========================================
+  UPDATE
+========================================= */
 
 function update(time){
 
-    if(
-        !playing ||
-        dead
-    ) return;
+ if(!playing || dead)
+ return;
 
 
-    const d =
-    difficulty[mode];
+ const d=
+ difficulty[mode];
 
 
-    /* trọng lực */
+ player.vy+=
+ gravity;
 
-    player.vy +=
-    gravity;
-
-    player.y +=
-    player.vy;
+ player.y+=
+ player.vy;
 
 
-    /* tạo cột */
+ if(
+  time-lastPipe>
+  d.spawn
+ ){
 
-    if(
-        time-lastPipe >
-        d.spawn
-    ){
+  createPipe();
 
-        createPipe();
+  lastPipe=time;
 
-        lastPipe =
-        time;
-
-    }
+ }
 
 
-    /* kiểm tra cột */
+ for(
+  const p of pipes
+ ){
 
-    for(
-        const p of pipes
-    ){
-
-        p.x -=
-        d.speed;
+  p.x-=
+  d.speed;
 
 
-        /* hitbox nhỏ hơn hình */
+  const px=
+  player.x+8;
 
-        const px =
-        player.x + 8;
+  const py=
+  player.y+7;
 
-        const py =
-        player.y + 7;
+  const pw=
+  player.w-16;
 
-        const pw =
-        player.w - 16;
-
-        const ph =
-        player.h - 12;
+  const ph=
+  player.h-12;
 
 
-        const hitX =
-        px + pw > p.x &&
-        px < p.x + p.w;
+  const hitX=
+  px+pw>p.x &&
+  px<p.x+p.w;
 
 
-        const hitTop =
-        py < p.top;
+  const hitTop=
+  py<p.top;
+
+  const hitBottom=
+  py+ph>p.bottom;
 
 
-        const hitBottom =
-        py + ph > p.bottom;
+  if(
+   hitX &&
+   (hitTop||hitBottom)
+  ){
+
+   endGame();
+
+  }
 
 
-        if(
-            hitX &&
-            (
-                hitTop ||
-                hitBottom
-            )
-        ){
+  if(
+   !p.passed &&
+   p.x+p.w<
+   player.x
+  ){
 
-            endGame();
+   p.passed=true;
 
-        }
+   score++;
 
+   document
+   .getElementById("score")
+   .textContent=
+   score;
 
-        /* điểm */
+  }
 
-        if(
-            !p.passed &&
-            p.x+p.w <
-            player.x
-        ){
-
-            p.passed =
-            true;
-
-            score++;
-
-            scoreText.textContent =
-            score;
-
-        }
-
-    }
+ }
 
 
-    pipes =
-    pipes.filter(
-        p =>
-        p.x > -150
-    );
+ pipes=
+ pipes.filter(
+  p=>p.x>-150
+ );
 
 
-    /* đụng trần */
-
-    if(
-        player.y < 0
-    ){
-
-        endGame();
-
-    }
+ if(player.y<0)
+ endGame();
 
 
-    /* đụng đất */
-
-    if(
-        player.y +
-        player.h >
-        canvas.height - 65
-    ){
-
-        endGame();
-
-    }
+ if(
+  player.y+
+  player.h>
+  canvas.height-65
+ )
+ endGame();
 
 }
 
 
-/* =================================================
-   GAME OVER
-================================================= */
+/* =========================================
+  GAME OVER
+========================================= */
 
 function endGame(){
 
-    if(dead)
-    return;
+ if(dead)
+ return;
 
-    dead =
-    true;
-
-    playing =
-    false;
+ dead=true;
+ playing=false;
 
 
-    if(
-        score > best
-    ){
+ if(score>best){
 
-        best =
-        score;
+  best=score;
 
-        localStorage.setItem(
-            "animalJumpBest",
-            best
-        );
+  localStorage.setItem(
+   "animalJumpBest",
+   best
+  );
 
-    }
+ }
 
 
-    result.innerHTML =
+ document
+ .getElementById("result")
+ .innerHTML=
+ `
+ 👤 ${playerName}<br>
+ 🐾 ${animals.find(a=>a[0]===animal)?.[2]||""}<br>
+ 🏆 Điểm: <b>${score}</b><br>
+ ⭐ Kỷ lục: <b>${best}</b>
+ `;
 
-    `👤 ${playerName}<br>
-     🏆 Điểm: <b>${score}</b><br>
-     ⭐ Kỷ lục: <b>${best}</b>`;
 
-    over.style.display =
-    "flex";
+ document
+ .getElementById("over")
+ .style.display="flex";
 
 }
 
 
-/* =================================================
-   VỀ MENU
-================================================= */
+/* =========================================
+  VỀ MENU
+========================================= */
 
 document
 .getElementById("again")
 .onclick=()=>{
 
-    over.style.display =
-    "none";
+ document
+ .getElementById("over")
+ .style.display="none";
 
-    menu.style.display =
-    "flex";
+ document
+ .getElementById("menu")
+ .style.display="flex";
 
-    pipes =
-    [];
+ pipes=[];
 
-    score =
-    0;
+ score=0;
 
-    scoreText.textContent =
-    "0";
+ document
+ .getElementById("score")
+ .textContent="0";
 
-    playerLabel.textContent =
-    "";
+ document
+ .getElementById("playerLabel")
+ .textContent="";
 
 };
 
 
-/* =================================================
-   BACKGROUND
-================================================= */
+/* =========================================
+  NỀN
+========================================= */
 
-function drawBackground(){
+function background(){
 
-    const sky =
-    ctx.createLinearGradient(
-        0,0,
-        0,canvas.height
-    );
+ const sky=
+ ctx.createLinearGradient(
+  0,0,
+  0,canvas.height
+ );
 
-    sky.addColorStop(
-        0,
-        "#55bde0"
-    );
+ sky.addColorStop(
+  0,
+  "#55bfe3"
+ );
 
-    sky.addColorStop(
-        1,
-        "#d8f6ff"
-    );
+ sky.addColorStop(
+  1,
+  "#d9f7ff"
+ );
 
-    ctx.fillStyle =
-    sky;
+ ctx.fillStyle=sky;
 
-    ctx.fillRect(
-        0,0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    /* mặt trời */
-
-    ctx.fillStyle =
-    "#ffe27a";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        canvas.width-100,
-        90,
-        43,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
+ ctx.fillRect(
+  0,0,
+  canvas.width,
+  canvas.height
+ );
 
 
-    /* mây */
+ /* mặt trời */
 
-    drawCloud(
-        120,100,32
-    );
+ ctx.fillStyle="#ffe47a";
 
-    drawCloud(
-        canvas.width*.52,
-        150,
-        27
-    );
+ ctx.beginPath();
 
-    drawCloud(
-        canvas.width*.82,
-        75,
-        30
-    );
+ ctx.arc(
+  canvas.width-100,
+  90,
+  42,
+  0,
+  Math.PI*2
+ );
+
+ ctx.fill();
+
+
+ cloud(
+  130,
+  100,
+  30
+ );
+
+ cloud(
+  canvas.width*.55,
+  145,
+  27
+ );
 
 }
 
 
-/* =================================================
-   CLOUD
-================================================= */
+function cloud(x,y,s){
 
-function drawCloud(x,y,s){
+ ctx.fillStyle=
+ "rgba(255,255,255,.8)";
 
-    ctx.fillStyle =
-    "rgba(255,255,255,.8)";
+ ctx.beginPath();
 
-    ctx.beginPath();
+ ctx.arc(
+  x,y,s,
+  0,Math.PI*2
+ );
 
-    ctx.arc(
-        x,y,s,
-        0,Math.PI*2
-    );
+ ctx.arc(
+  x+s,
+  y-8,
+  s*.75,
+  0,Math.PI*2
+ );
 
-    ctx.arc(
-        x+s,
-        y-s*.25,
-        s*.75,
-        0,Math.PI*2
-    );
+ ctx.arc(
+  x+s*2,
+  y,
+  s,
+  0,Math.PI*2
+ );
 
-    ctx.arc(
-        x+s*2,
-        y,
-        s,
-        0,Math.PI*2
-    );
-
-    ctx.fill();
+ ctx.fill();
 
 }
 
 
-/* =================================================
-   CỘT ĐẸP
-================================================= */
+/* =========================================
+  CỘT ĐẸP
+========================================= */
 
 function drawPipe(p){
 
-    const x =
-    p.x;
-
-    const w =
-    p.w;
+ const x=p.x;
+ const w=p.w;
 
 
-    /*
-       GRADIENT CỘT
-    */
+ const g=
+ ctx.createLinearGradient(
+  x,0,
+  x+w,0
+ );
 
-    const gradient =
-    ctx.createLinearGradient(
-        x,0,
-        x+w,0
-    );
+ g.addColorStop(
+  0,
+  "#125b29"
+ );
 
-    gradient.addColorStop(
-        0,
-        "#12672d"
-    );
+ g.addColorStop(
+  .25,
+  "#2d9e42"
+ );
 
-    gradient.addColorStop(
-        .25,
-        "#38a94b"
-    );
+ g.addColorStop(
+  .5,
+  "#5acb61"
+ );
 
-    gradient.addColorStop(
-        .5,
-        "#53c85d"
-    );
+ g.addColorStop(
+  .75,
+  "#2c9b41"
+ );
 
-    gradient.addColorStop(
-        .75,
-        "#29983e"
-    );
-
-    gradient.addColorStop(
-        1,
-        "#0e5c29"
-    );
+ g.addColorStop(
+  1,
+  "#0c5225"
+ );
 
 
-    ctx.fillStyle =
-    gradient;
+ ctx.fillStyle=g;
 
 
-    /* ==================
-       CỘT TRÊN
-    ================== */
+ /* thân trên */
 
-    ctx.fillRect(
-        x,
-        0,
-        w,
-        p.top
-    );
+ ctx.fillRect(
+  x,0,
+  w,p.top
+ );
 
 
-    /* ==================
-       CỘT DƯỚI
-    ================== */
+ /* thân dưới */
 
-    ctx.fillRect(
-        x,
-        p.bottom,
-        w,
-        canvas.height-p.bottom
-    );
+ ctx.fillRect(
+  x,p.bottom,
+  w,
+  canvas.height-p.bottom
+ );
 
 
-    /* ==================
-       ĐẦU CỘT
-    ================== */
+ /* đầu cột */
 
-    ctx.fillStyle =
-    "#43b953";
+ ctx.fillStyle=
+ "#45b953";
 
 
-    /* đầu trên */
-
-    ctx.fillRect(
-        x-9,
-        p.top-30,
-        w+18,
-        30
-    );
+ ctx.fillRect(
+  x-8,
+  p.top-28,
+  w+16,
+  28
+ );
 
 
-    /* đầu dưới */
-
-    ctx.fillRect(
-        x-9,
-        p.bottom,
-        w+18,
-        30
-    );
+ ctx.fillRect(
+  x-8,
+  p.bottom,
+  w+16,
+  28
+ );
 
 
-    /* ==================
-       VIỀN
-    ================== */
+ /* viền */
 
-    ctx.strokeStyle =
-    "#0d5427";
+ ctx.strokeStyle=
+ "#104e25";
 
-    ctx.lineWidth =
-    4;
+ ctx.lineWidth=4;
 
 
-    ctx.strokeRect(
-        x,
-        0,
-        w,
-        p.top
-    );
+ ctx.strokeRect(
+  x,0,
+  w,p.top
+ );
+
+ ctx.strokeRect(
+  x,p.bottom,
+  w,
+  canvas.height-p.bottom
+ );
 
 
-    ctx.strokeRect(
-        x,
-        p.bottom,
-        w,
-        canvas.height-p.bottom
-    );
+ ctx.strokeRect(
+  x-8,
+  p.top-28,
+  w+16,
+  28
+ );
+
+ ctx.strokeRect(
+  x-8,
+  p.bottom,
+  w+16,
+  28
+ );
 
 
-    ctx.strokeRect(
-        x-9,
-        p.top-30,
-        w+18,
-        30
-    );
+ /* ánh sáng */
 
+ ctx.fillStyle=
+ "rgba(255,255,255,.18)";
 
-    ctx.strokeRect(
-        x-9,
-        p.bottom,
-        w+18,
-        30
-    );
+ ctx.fillRect(
+  x+12,
+  0,
+  7,
+  p.top
+ );
 
-
-    /* ==================
-       BÓNG
-    ================== */
-
-    ctx.fillStyle =
-    "rgba(255,255,255,.16)";
-
-    ctx.fillRect(
-        x+12,
-        0,
-        8,
-        p.top
-    );
-
-    ctx.fillRect(
-        x+12,
-        p.bottom,
-        8,
-        canvas.height-p.bottom
-    );
-
-
-    /* ==================
-       DÂY LEO
-    ================== */
-
-    ctx.strokeStyle =
-    "#78c94d";
-
-    ctx.lineWidth =
-    4;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+w-12,
-        0
-    );
-
-    for(
-        let y=30;
-        y<p.top-30;
-        y+=30
-    ){
-
-        ctx.lineTo(
-            x+w-12 +
-            Math.sin(y*.2)*5,
-            y
-        );
-
-    }
-
-    ctx.stroke();
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+w-12,
-        p.bottom
-    );
-
-    for(
-        let y=p.bottom+30;
-        y<canvas.height;
-        y+=30
-    ){
-
-        ctx.lineTo(
-            x+w-12 +
-            Math.sin(y*.2)*5,
-            y
-        );
-
-    }
-
-    ctx.stroke();
+ ctx.fillRect(
+  x+12,
+  p.bottom,
+  7,
+  canvas.height
+ );
 
 }
 
 
-/* =================================================
-   NHÂN VẬT
-================================================= */
+/* =========================================
+  NHÂN VẬT
+========================================= */
 
 function drawPlayer(){
 
-    const x =
-    player.x;
+ const emoji=
+ animals.find(
+  a=>a[0]===animal
+ )?.[1] || "🦆";
 
-    const y =
-    player.y;
 
+ /*
+   Dùng emoji cho 40 con vật.
+   Canvas tự vẽ emoji nên không bị
+   ngược như ảnh cũ.
+ */
 
-    if(animal==="duck")
-        drawDuck(x,y);
+ ctx.font=
+ "48px Arial";
 
-    else if(animal==="cat")
-        drawCat(x,y);
+ ctx.textAlign=
+ "center";
 
-    else if(animal==="rabbit")
-        drawRabbit(x,y);
+ ctx.textBaseline=
+ "middle";
 
-    else if(animal==="frog")
-        drawFrog(x,y);
-
-    else if(animal==="panda")
-        drawPanda(x,y);
-
-    else if(animal==="fox")
-        drawFox(x,y);
-
-    else if(animal==="bee")
-        drawBee(x,y);
-
-    else if(animal==="penguin")
-        drawPenguin(x,y);
+ ctx.fillText(
+  emoji,
+  player.x+player.w/2,
+  player.y+player.h/2
+ );
 
 }
 
 
-/* =================================================
-   MẮT
-================================================= */
+/* =========================================
+  ĐẤT
+========================================= */
 
-function eye(x,y){
+function ground(){
 
-    ctx.fillStyle =
-    "white";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,y,6,
-        0,Math.PI*2
-    );
-
-    ctx.fill();
-
-    ctx.fillStyle =
-    "#111";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x+1,y,3,
-        0,Math.PI*2
-    );
-
-    ctx.fill();
-
-}
+ const y=
+ canvas.height-65;
 
 
-/* =================================================
-   VỊT
-================================================= */
+ ctx.fillStyle=
+ "#73c94c";
 
-function drawDuck(x,y){
-
-    ctx.fillStyle =
-    "#ffd83d";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+27,y+28,
-        27,19,
-        0,0,Math.PI*2
-    );
-
-    ctx.fill();
+ ctx.fillRect(
+  0,y,
+  canvas.width,
+  65
+ );
 
 
-    ctx.fillStyle =
-    "#ffe34d";
+ ctx.fillStyle=
+ "#a0dd59";
 
-    ctx.beginPath();
+ for(
+  let x=0;
+  x<canvas.width;
+  x+=18
+ ){
 
-    ctx.arc(
-        x+43,y+14,
-        19,
-        0,Math.PI*2
-    );
+  ctx.beginPath();
 
-    ctx.fill();
+  ctx.moveTo(
+   x,y
+  );
+
+  ctx.lineTo(
+   x+6,y-8
+  );
+
+  ctx.lineTo(
+   x+12,y
+  );
+
+  ctx.fill();
+
+ }
 
 
-    ctx.fillStyle =
-    "#ef8124";
+ ctx.fillStyle=
+ "#a97543";
 
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+57,y+13
-    );
-
-    ctx.lineTo(
-        x+78,y+20
-    );
-
-    ctx.lineTo(
-        x+57,y+27
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-    eye(
-        x+49,
-        y+8
-    );
+ ctx.fillRect(
+  0,
+  canvas.height-18,
+  canvas.width,
+  18
+ );
 
 }
 
 
-/* =================================================
-   MÈO
-================================================= */
-
-function drawCat(x,y){
-
-    ctx.fillStyle =
-    "#e7a15d";
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+8,y+17
-    );
-
-    ctx.lineTo(
-        x+14,y-5
-    );
-
-    ctx.lineTo(
-        x+27,y+12
-    );
-
-    ctx.fill();
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+36,y+12
-    );
-
-    ctx.lineTo(
-        x+50,y-5
-    );
-
-    ctx.lineTo(
-        x+55,y+18
-    );
-
-    ctx.fill();
-
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x+31,y+27,
-        25,
-        0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+27,y+47,
-        25,14,
-        0,0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    eye(x+22,y+22);
-    eye(x+40,y+22);
-
-}
-
-
-/* =================================================
-   THỎ
-================================================= */
-
-function drawRabbit(x,y){
-
-    ctx.fillStyle =
-    "#f5f5f5";
-
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+18,y+2,
-        9,28,
-        -.15,
-        0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+42,y+2,
-        9,28,
-        .15,
-        0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x+30,y+29,
-        24,
-        0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+27,y+48,
-        25,14,
-        0,0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    eye(x+22,y+24);
-    eye(x+38,y+24);
-
-}
-
-
-/* =================================================
-   ẾCH
-================================================= */
-
-function drawFrog(x,y){
-
-    ctx.fillStyle =
-    "#56bd44";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+30,y+29,
-        29,22,
-        0,0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x+13,y+12,
-        11,
-        0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x+47,y+12,
-        11,
-        0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    eye(x+13,y+12);
-    eye(x+47,y+12);
-
-}
-
-
-/* =================================================
-   GẤU TRÚC
-================================================= */
-
-function drawPanda(x,y){
-
-    ctx.fillStyle =
-    "white";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x+30,y+27,
-        25,
-        0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.fillStyle =
-    "#222";
-
-    /* tai */
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x+10,y+7,
-        9,
-        0,Math.PI*2
-    );
-
-    ctx.fill();
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x+50,y+7,
-        9,
-        0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    /* mắt */
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+20,y+25,
-        8,12,
-        -.4,0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+40,y+25,
-        8,12,
-        .4,0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    eye(
-        x+20,y+25
-    );
-
-    eye(
-        x+40,y+25
-    );
-
-}
-
-
-/* =================================================
-   CÁO
-================================================= */
-
-function drawFox(x,y){
-
-    ctx.fillStyle =
-    "#f28b35";
-
-
-    /* đầu */
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+5,y+17
-    );
-
-    ctx.lineTo(
-        x+16,y-7
-    );
-
-    ctx.lineTo(
-        x+30,y+7
-    );
-
-    ctx.lineTo(
-        x+44,y-7
-    );
-
-    ctx.lineTo(
-        x+57,y+17
-    );
-
-    ctx.lineTo(
-        x+50,y+43
-    );
-
-    ctx.lineTo(
-        x+12,y+43
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    /* mặt trắng */
-
-    ctx.fillStyle =
-    "#fff0d8";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+16,y+29
-    );
-
-    ctx.lineTo(
-        x+30,y+41
-    );
-
-    ctx.lineTo(
-        x+44,y+29
-    );
-
-    ctx.lineTo(
-        x+38,y+42
-    );
-
-    ctx.lineTo(
-        x+22,y+42
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    eye(x+20,y+21);
-    eye(x+40,y+21);
-
-}
-
-
-/* =================================================
-   ONG
-================================================= */
-
-function drawBee(x,y){
-
-    ctx.fillStyle =
-    "#ffd52e";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+30,y+29,
-        27,19,
-        0,0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.strokeStyle =
-    "#333";
-
-    ctx.lineWidth =
-    6;
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+15,y+15
-    );
-
-    ctx.lineTo(
-        x+15,y+43
-    );
-
-    ctx.stroke();
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+32,y+11
-    );
-
-    ctx.lineTo(
-        x+32,y+47
-    );
-
-    ctx.stroke();
-
-
-    ctx.fillStyle =
-    "rgba(255,255,255,.7)";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+19,y+8,
-        13,9,
-        -.5,0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+43,y+8,
-        13,9,
-        .5,0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    eye(x+48,y+24);
-
-}
-
-
-/* =================================================
-   CHIM CÁNH CỤT
-================================================= */
-
-function drawPenguin(x,y){
-
-    ctx.fillStyle =
-    "#222c35";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+30,y+30,
-        25,29,
-        0,0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.fillStyle =
-    "white";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x+30,y+34,
-        17,21,
-        0,0,Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.fillStyle =
-    "#f5a623";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+27,y+27
-    );
-
-    ctx.lineTo(
-        x+45,y+32
-    );
-
-    ctx.lineTo(
-        x+27,y+37
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    eye(x+23,y+18);
-    eye(x+39,y+18);
-
-}
-
-
-/* =================================================
-   MẶT ĐẤT
-================================================= */
-
-function drawGround(){
-
-    const y =
-    canvas.height - 65;
-
-
-    ctx.fillStyle =
-    "#70c44a";
-
-    ctx.fillRect(
-        0,
-        y,
-        canvas.width,
-        65
-    );
-
-
-    /* cỏ */
-
-    ctx.fillStyle =
-    "#9ddd58";
-
-    for(
-        let x=0;
-        x<canvas.width;
-        x+=18
-    ){
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            x,y
-        );
-
-        ctx.lineTo(
-            x+6,y-9
-        );
-
-        ctx.lineTo(
-            x+12,y
-        );
-
-        ctx.fill();
-
-    }
-
-
-    /* đất */
-
-    ctx.fillStyle =
-    "#a87543";
-
-    ctx.fillRect(
-        0,
-        canvas.height-18,
-        canvas.width,
-        18
-    );
-
-}
-
-
-/* =================================================
-   DRAW
-================================================= */
+/* =========================================
+  DRAW
+========================================= */
 
 function draw(){
 
-    drawBackground();
+ background();
 
-    for(
-        const p of pipes
-    ){
+ for(
+  const p of pipes
+ ){
 
-        drawPipe(p);
+  drawPipe(p);
 
-    }
+ }
 
-    drawGround();
+ ground();
 
+ if(
+  playing ||
+  dead
+ ){
 
-    if(
-        playing ||
-        dead
-    ){
+  drawPlayer();
 
-        drawPlayer();
-
-    }
+ }
 
 }
 
 
-/* =================================================
-   GAME LOOP
-================================================= */
+/* =========================================
+  GAME LOOP
+========================================= */
 
 function loop(time){
 
-    update(time);
+ update(time);
 
-    draw();
+ draw();
 
-    requestAnimationFrame(
-        loop
-    );
+ requestAnimationFrame(
+  loop
+ );
 
 }
 
 requestAnimationFrame(
-    loop
+ loop
 );
 
 </script>
