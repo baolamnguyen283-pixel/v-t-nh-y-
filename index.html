@@ -15,7 +15,7 @@
 
 body{
   font-family:Arial,sans-serif;
-  background:linear-gradient(135deg,#79d7ff,#b8f3ff);
+  background:linear-gradient(135deg,#78d8ff,#d7f8ff);
   min-height:100vh;
   display:flex;
   justify-content:center;
@@ -39,22 +39,22 @@ body{
 
 .card{
   width:min(700px,95vw);
-  background:rgba(255,255,255,.94);
+  background:rgba(255,255,255,.96);
   border-radius:25px;
-  padding:30px;
+  padding:28px;
   text-align:center;
   box-shadow:0 15px 45px rgba(0,0,0,.2);
 }
 
 h1{
   font-size:42px;
-  margin-bottom:15px;
   color:#1684b8;
+  margin-bottom:12px;
 }
 
 h2{
-  margin-bottom:18px;
   color:#1684b8;
+  margin-bottom:15px;
 }
 
 input{
@@ -64,15 +64,15 @@ input{
   border:2px solid #9edff5;
   border-radius:14px;
   font-size:18px;
-  margin:10px 0 18px;
+  margin:10px 0 15px;
   outline:none;
 }
 
 button{
   border:0;
   border-radius:14px;
-  padding:13px 22px;
-  margin:6px;
+  padding:12px 20px;
+  margin:5px;
   font-size:17px;
   font-weight:bold;
   cursor:pointer;
@@ -93,7 +93,7 @@ button:active{
   display:flex;
   justify-content:center;
   flex-wrap:wrap;
-  margin-bottom:20px;
+  margin-bottom:12px;
 }
 
 .diff{
@@ -106,29 +106,68 @@ button:active{
   color:white;
 }
 
+.musicBox{
+  margin:15px auto;
+  padding:14px;
+  background:#eefaff;
+  border-radius:18px;
+  max-width:500px;
+}
+
+.musicButtons{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.musicBtn{
+  background:#ddd;
+  color:#333;
+}
+
+.musicBtn.selected{
+  background:#8b5cf6;
+  color:white;
+}
+
 .animal-grid{
   display:grid;
   grid-template-columns:repeat(10,1fr);
   gap:7px;
-  max-height:430px;
-  overflow-y:auto;
   padding:8px;
+  min-height:300px;
 }
 
 .animal{
-  height:55px;
-  font-size:31px;
-  padding:4px;
+  height:52px;
+  font-size:29px;
+  padding:3px;
   background:#eefaff;
   border:2px solid transparent;
   border-radius:12px;
-  cursor:pointer;
 }
 
 .animal.selected{
   border-color:#1684b8;
   background:#bdeeff;
-  transform:scale(1.08);
+  transform:scale(1.07);
+}
+
+.pageInfo{
+  font-size:18px;
+  font-weight:bold;
+  margin:8px;
+  color:#555;
+}
+
+.pageButtons{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.pageButtons button{
+  min-width:100px;
 }
 
 #gameScreen{
@@ -166,7 +205,6 @@ button:active{
   align-items:center;
   font-size:43px;
   z-index:10;
-  transition:transform .05s;
 }
 
 .pipe{
@@ -212,13 +250,13 @@ button:active{
   height:25%;
   width:100%;
   background:
-    repeating-linear-gradient(
-      45deg,
-      #65c94d 0,
-      #65c94d 18px,
-      #56b942 18px,
-      #56b942 36px
-    );
+  repeating-linear-gradient(
+    45deg,
+    #65c94d 0,
+    #65c94d 18px,
+    #56b942 18px,
+    #56b942 36px
+  );
   border-top:5px solid #3b9c35;
   z-index:8;
 }
@@ -251,25 +289,24 @@ button:active{
   margin:10px;
 }
 
-.small{
-  color:#666;
-  margin-top:10px;
-}
-
 @media(max-width:650px){
-  h1{font-size:34px}
+
+  h1{
+    font-size:34px;
+  }
 
   .card{
-    padding:20px;
+    padding:18px;
   }
 
   .animal-grid{
-    grid-template-columns:repeat(6,1fr);
-    max-height:390px;
+    grid-template-columns:repeat(5,1fr);
+    gap:6px;
   }
 
   .animal{
-    height:53px;
+    height:55px;
+    font-size:30px;
   }
 
   #player{
@@ -291,175 +328,303 @@ button:active{
 
 <body>
 
-<!-- MENU -->
+<!-- ================= MENU ================= -->
+
 <section id="menuScreen" class="screen active">
-  <div class="card">
-    <h1>🐾 Animal Jump</h1>
 
-    <p>Nhập tên người chơi</p>
+<div class="card">
 
-    <input id="playerName"
-           maxlength="20"
-           placeholder="Tên của bạn...">
+<h1>🐾 Animal Jump</h1>
 
-    <h3>Chọn độ khó</h3>
+<p>Nhập tên người chơi</p>
 
-    <div class="difficulty">
-      <button class="diff selected" data-level="easy">🟢 Dễ</button>
-      <button class="diff" data-level="normal">🟡 Thường</button>
-      <button class="diff" data-level="hard">🔴 Khó</button>
-    </div>
+<input id="playerName"
+       maxlength="20"
+       placeholder="Tên của bạn...">
 
-    <button id="chooseAnimalBtn">
-      🐾 Chọn con vật
-    </button>
-  </div>
+<h3>Chọn độ khó</h3>
+
+<div class="difficulty">
+
+<button class="diff selected"
+        data-level="easy">
+🟢 Dễ
+</button>
+
+<button class="diff"
+        data-level="normal">
+🟡 Thường
+</button>
+
+<button class="diff"
+        data-level="hard">
+🔴 Khó
+</button>
+
+</div>
+
+<div class="musicBox">
+
+<h3>🎵 Nhạc nền</h3>
+
+<div class="musicButtons">
+
+<button class="musicBtn selected"
+        data-music="1">
+🎮 Gaming
+</button>
+
+<button class="musicBtn"
+        data-music="2">
+⚡ Phonk
+</button>
+
+<button class="musicBtn"
+        data-music="3">
+🌙 Chill
+</button>
+
+</div>
+
+</div>
+
+<button id="chooseAnimalBtn">
+🐾 Chọn nhân vật
+</button>
+
+</div>
+
 </section>
 
-<!-- ANIMAL -->
+
+<!-- ================= CHỌN NHÂN VẬT ================= -->
+
 <section id="animalScreen" class="screen">
-  <div class="card">
-    <h2>🐾 Chọn con vật</h2>
 
-    <div id="animalGrid" class="animal-grid"></div>
+<div class="card">
 
-    <br>
+<h2 id="pageTitle">
+🐾 Trang 1 - Động vật
+</h2>
 
-    <button id="backBtn">⬅ Quay lại</button>
-    <button id="startBtn">🚀 Bắt đầu</button>
-  </div>
+<div id="animalGrid"
+     class="animal-grid">
+</div>
+
+<div class="pageInfo">
+Trang <span id="pageNumber">1</span> / 2
+</div>
+
+<div class="pageButtons">
+
+<button id="prevPage">
+◀ Trước
+</button>
+
+<button id="nextPage">
+Sau ▶
+</button>
+
+</div>
+
+<br>
+
+<button id="backBtn">
+⬅ Quay lại
+</button>
+
+<button id="startBtn">
+🚀 Bắt đầu
+</button>
+
+</div>
+
 </section>
 
-<!-- GAME -->
+
+<!-- ================= GAME ================= -->
+
 <section id="gameScreen" class="screen">
 
-  <div id="game">
+<div id="game">
 
-    <div id="score">0</div>
+<div id="score">
+0
+</div>
 
-    <div id="player">🐤</div>
+<div id="player">
+🐤
+</div>
 
-    <div class="ground"></div>
+<div class="ground"></div>
 
-    <div id="gameOver">
-      <div class="over-card">
-        <h2>💥 Game Over!</h2>
 
-        <div id="finalScore">
-          Điểm: 0
-        </div>
+<div id="gameOver">
 
-        <div id="bestScore">
-          Kỷ lục: 0
-        </div>
+<div class="over-card">
 
-        <button id="retryBtn">
-          🔄 Chơi lại
-        </button>
+<h2>💥 Game Over!</h2>
 
-        <button id="menuBtn">
-          🏠 Menu
-        </button>
-      </div>
-    </div>
+<div id="finalScore">
+Điểm: 0
+</div>
 
-  </div>
+<div id="bestScore">
+Kỷ lục: 0
+</div>
+
+<button id="retryBtn">
+🔄 Chơi lại
+</button>
+
+<button id="menuBtn">
+🏠 Menu
+</button>
+
+</div>
+
+</div>
+
+</div>
 
 </section>
+
 
 <script>
 
-/* =========================
-   100 CON VẬT
-========================= */
+/* ==========================================
+   50 ĐỘNG VẬT
+========================================== */
 
 const animals = [
-"🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯",
-"🦁","🐮","🐷","🐸","🐵","🙈","🙉","🙊","🐔","🐧",
-"🐦","🐤","🦆","🦅","🦉","🦇","🐺","🐗","🐴","🦄",
-"🐝","🐛","🦋","🐌","🐞","🐜","🕷️","🐢","🐍","🦎",
-"🦖","🦕","🐙","🦑","🦀","🐠","🐟","🐡","🦈","🐳",
-"🐋","🐬","🦭","🐊","🦓","🦒","🐘","🦏","🦛","🐪",
-"🐫","🦙","🦘","🦬","🐃","🐂","🐄","🐎","🐖","🐏",
-"🐑","🐐","🦌","🫎","🐕","🐩","🦮","🐕‍🦺","🐈","🐈‍⬛",
-"🐓","🦃","🦚","🦜","🦢","🦩","🕊️","🐇","🦔","🦝",
-"🦡","🦨","🦦","🦥","🐿️","🦫","🐉","🐲","👾","🌟"
+
+"🐶","🐱","🐭","🐹","🐰",
+"🦊","🐻","🐼","🐨","🐯",
+
+"🦁","🐮","🐷","🐸","🐵",
+"🐔","🐧","🐦","🐤","🦆",
+
+"🦅","🦉","🐺","🐗","🐴",
+"🦄","🐝","🦋","🐢","🐍",
+
+"🦎","🦖","🦕","🐙","🦀",
+"🐠","🐟","🦈","🐳","🐬",
+
+"🦓","🦒","🐘","🦏","🦛",
+"🐪","🦙","🦘","🦬","🦌"
+
 ];
 
-/* =========================
-   ELEMENTS
-========================= */
+
+/* ==========================================
+   50 ICON
+========================================== */
+
+const icons = [
+
+"😀","😎","😂","🤣","😍",
+"🥰","😘","😜","🤪","🤩",
+
+"🥳","😴","🤔","😱","😈",
+"👻","💀","👽","🤖","🎃",
+
+"🔥","💥","⭐","🌟","✨",
+"⚡","💎","❤️","💙","💚",
+
+"💜","🖤","🤍","💯","🎯",
+"🎮","🎲","🎸","🎧","🏆",
+
+"🚀","✈️","🏎️","⚽","🏀",
+"🎁","🍕","🍔","🍩","🍉"
+
+];
+
+
+/* ==========================================
+   ELEMENT
+========================================== */
 
 const menuScreen =
-  document.getElementById("menuScreen");
+document.getElementById("menuScreen");
 
 const animalScreen =
-  document.getElementById("animalScreen");
+document.getElementById("animalScreen");
 
 const gameScreen =
-  document.getElementById("gameScreen");
+document.getElementById("gameScreen");
 
 const animalGrid =
-  document.getElementById("animalGrid");
+document.getElementById("animalGrid");
+
+const pageTitle =
+document.getElementById("pageTitle");
+
+const pageNumber =
+document.getElementById("pageNumber");
 
 const player =
-  document.getElementById("player");
+document.getElementById("player");
 
 const game =
-  document.getElementById("game");
+document.getElementById("game");
 
 const scoreText =
-  document.getElementById("score");
+document.getElementById("score");
 
 const gameOver =
-  document.getElementById("gameOver");
+document.getElementById("gameOver");
 
 const finalScore =
-  document.getElementById("finalScore");
+document.getElementById("finalScore");
 
 const bestScore =
-  document.getElementById("bestScore");
+document.getElementById("bestScore");
 
 const playerName =
-  document.getElementById("playerName");
+document.getElementById("playerName");
 
-/* =========================
-   SETTINGS
-========================= */
+
+/* ==========================================
+   CÀI ĐẶT
+========================================== */
 
 const settings = {
 
-  easy:{
-    speed:3.5,
-    gap:110,
-    spawn:1900
-  },
+easy:{
+speed:3.5,
+gap:120,
+spawn:1900
+},
 
-  normal:{
-    speed:4.5,
-    gap:100,
-    spawn:1650
-  },
+normal:{
+speed:4.5,
+gap:110,
+spawn:1650
+},
 
-  hard:{
-    speed:5.5,
-    gap:90,
-    spawn:1450
-  }
+hard:{
+speed:5.5,
+gap:100,
+spawn:1450
+}
 
 };
+
 
 let difficulty = "easy";
 
 let selectedAnimal = "🐤";
 
+let currentPage = 1;
+
+let selectedMusic = 1;
+
 let running = false;
 
 let score = 0;
 
-let best = Number(
-  localStorage.getItem("animalJumpBest") || 0
-);
+let best =
+Number(localStorage.getItem("animalJumpBest") || 0);
 
 let playerY = 300;
 
@@ -473,593 +638,728 @@ let spawnTimer = 0;
 
 let animation;
 
-/* =========================
-   TẠO 100 CON VẬT
-========================= */
 
-animals.forEach((animal,index)=>{
+/* ==========================================
+   HIỂN THỊ NHÂN VẬT
+========================================== */
 
-  const button =
-    document.createElement("button");
+function showPage(page){
 
-  button.className = "animal";
+currentPage = page;
 
-  button.textContent = animal;
+animalGrid.innerHTML = "";
 
-  if(animal === selectedAnimal){
-    button.classList.add("selected");
-  }
+let list =
+page === 1 ? animals : icons;
 
-  button.title =
-    "Con vật số " + (index+1);
+pageTitle.textContent =
+page === 1
+? "🐾 Trang 1 - Động vật"
+: "✨ Trang 2 - Icon";
 
-  button.onclick = ()=>{
+pageNumber.textContent = page;
 
-    document
-      .querySelectorAll(".animal")
-      .forEach(x=>x.classList.remove("selected"));
+list.forEach((animal,index)=>{
 
-    button.classList.add("selected");
+const button =
+document.createElement("button");
 
-    selectedAnimal = animal;
+button.className = "animal";
 
-  };
+button.textContent = animal;
 
-  animalGrid.appendChild(button);
+if(animal === selectedAnimal){
+button.classList.add("selected");
+}
+
+button.onclick = ()=>{
+
+document
+.querySelectorAll(".animal")
+.forEach(x=>
+x.classList.remove("selected")
+);
+
+button.classList.add("selected");
+
+selectedAnimal = animal;
+
+};
+
+animalGrid.appendChild(button);
 
 });
 
-/* =========================
+}
+
+
+/* ==========================================
+   TRANG NHÂN VẬT
+========================================== */
+
+showPage(1);
+
+document.getElementById("prevPage").onclick = ()=>{
+
+showPage(1);
+
+};
+
+document.getElementById("nextPage").onclick = ()=>{
+
+showPage(2);
+
+};
+
+
+/* ==========================================
    ĐỘ KHÓ
-========================= */
+========================================== */
 
 document
 .querySelectorAll(".diff")
 .forEach(button=>{
 
-  button.onclick = ()=>{
+button.onclick = ()=>{
 
-    document
-      .querySelectorAll(".diff")
-      .forEach(x=>x.classList.remove("selected"));
+document
+.querySelectorAll(".diff")
+.forEach(x=>
+x.classList.remove("selected")
+);
 
-    button.classList.add("selected");
+button.classList.add("selected");
 
-    difficulty =
-      button.dataset.level;
+difficulty =
+button.dataset.level;
 
-  };
+};
 
 });
 
-/* =========================
-   MÀN HÌNH
-========================= */
 
-document.getElementById(
-  "chooseAnimalBtn"
-).onclick = ()=>{
+/* ==========================================
+   CHỌN NHẠC
+========================================== */
 
-  animalScreen.classList.add("active");
-  menuScreen.classList.remove("active");
+document
+.querySelectorAll(".musicBtn")
+.forEach(button=>{
+
+button.onclick = ()=>{
+
+document
+.querySelectorAll(".musicBtn")
+.forEach(x=>
+x.classList.remove("selected")
+);
+
+button.classList.add("selected");
+
+selectedMusic =
+Number(button.dataset.music);
 
 };
 
+});
+
+
+/* ==========================================
+   ĐIỀU HƯỚNG
+========================================== */
+
 document.getElementById(
-  "backBtn"
+"chooseAnimalBtn"
 ).onclick = ()=>{
 
-  animalScreen.classList.remove("active");
-  menuScreen.classList.add("active");
+menuScreen.classList.remove("active");
+
+animalScreen.classList.add("active");
+
+showPage(1);
 
 };
 
+
 document.getElementById(
-  "startBtn"
-).onclick = startGame;
+"backBtn"
+).onclick = ()=>{
 
-/* =========================
-   NHẠC NỀN
-========================= */
+animalScreen.classList.remove("active");
 
-let music = null;
+menuScreen.classList.add("active");
+
+};
+
+
+/* ==========================================
+   NHẠC BẰNG WEB AUDIO
+========================================== */
+
+let audioContext = null;
+
+let musicTimer = null;
 
 function startMusic(){
 
-  if(music){
-    music.pause();
-    music.currentTime = 0;
-  }
+stopMusic();
 
-  /*
-    Nhạc nền nhẹ tạo bằng Web Audio.
-    Không cần file MP3.
-  */
+try{
 
-  try{
+const AudioContext =
+window.AudioContext ||
+window.webkitAudioContext;
 
-    const AudioContext =
-      window.AudioContext ||
-      window.webkitAudioContext;
+audioContext = new AudioContext();
 
-    if(!AudioContext) return;
+let notes;
 
-    const ctx = new AudioContext();
+if(selectedMusic === 1){
 
-    const notes = [
-      261.63,
-      329.63,
-      392,
-      329.63,
-      293.66,
-      349.23,
-      440,
-      349.23
-    ];
-
-    let index = 0;
-
-    function playNote(){
-
-      if(!running){
-        return;
-      }
-
-      const osc =
-        ctx.createOscillator();
-
-      const gain =
-        ctx.createGain();
-
-      osc.type = "triangle";
-
-      osc.frequency.value =
-        notes[index % notes.length];
-
-      gain.gain.setValueAtTime(
-        0.025,
-        ctx.currentTime
-      );
-
-      gain.gain.exponentialRampToValueAtTime(
-        0.001,
-        ctx.currentTime + .35
-      );
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start();
-
-      osc.stop(
-        ctx.currentTime + .35
-      );
-
-      index++;
-
-      setTimeout(playNote,420);
-
-    }
-
-    playNote();
-
-  }catch(e){}
+notes = [
+261.63,329.63,392,
+329.63,293.66,349.23,
+440,392
+];
 
 }
 
-/* =========================
+else if(selectedMusic === 2){
+
+notes = [
+110,110,146.83,130.81,
+110,164.81,146.83,110
+];
+
+}
+
+else{
+
+notes = [
+261.63,293.66,329.63,
+392,329.63,293.66,
+261.63,220
+];
+
+}
+
+let i = 0;
+
+function playNote(){
+
+if(!running) return;
+
+const osc =
+audioContext.createOscillator();
+
+const gain =
+audioContext.createGain();
+
+osc.type =
+selectedMusic === 2
+? "square"
+: "triangle";
+
+osc.frequency.value =
+notes[i % notes.length];
+
+gain.gain.setValueAtTime(
+0.018,
+audioContext.currentTime
+);
+
+gain.gain.exponentialRampToValueAtTime(
+0.001,
+audioContext.currentTime + .28
+);
+
+osc.connect(gain);
+
+gain.connect(audioContext.destination);
+
+osc.start();
+
+osc.stop(
+audioContext.currentTime + .3
+);
+
+i++;
+
+musicTimer =
+setTimeout(playNote,
+selectedMusic === 2 ? 260 : 400);
+
+}
+
+playNote();
+
+}catch(e){}
+
+}
+
+
+function stopMusic(){
+
+if(musicTimer){
+
+clearTimeout(musicTimer);
+
+musicTimer = null;
+
+}
+
+if(audioContext){
+
+audioContext.close();
+
+audioContext = null;
+
+}
+
+}
+
+
+/* ==========================================
    START GAME
-========================= */
+========================================== */
+
+document.getElementById(
+"startBtn"
+).onclick = startGame;
+
 
 function startGame(){
 
-  const name =
-    playerName.value.trim();
+if(!playerName.value.trim()){
 
-  if(!name){
+alert("Nhập tên người chơi trước nhé!");
 
-    playerName.focus();
+playerName.focus();
 
-    alert("Nhập tên người chơi trước nhé!");
-
-    return;
-
-  }
-
-  animalScreen.classList.remove("active");
-  gameScreen.classList.add("active");
-
-  score = 0;
-
-  scoreText.textContent = "0";
-
-  playerY = game.clientHeight * .4;
-
-  velocity = 0;
-
-  pipes.forEach(pipe=>{
-
-    pipe.top.remove();
-    pipe.bottom.remove();
-
-  });
-
-  pipes = [];
-
-  spawnTimer = 0;
-
-  player.textContent =
-    selectedAnimal;
-
-  player.style.left =
-    Math.min(
-      game.clientWidth * .25,
-      180
-    ) + "px";
-
-  player.style.top =
-    playerY + "px";
-
-  gameOver.style.display =
-    "none";
-
-  running = true;
-
-  startMusic();
-
-  cancelAnimationFrame(animation);
-
-  lastTime =
-    performance.now();
-
-  animation =
-    requestAnimationFrame(loop);
+return;
 
 }
 
-/* =========================
+animalScreen.classList.remove("active");
+
+gameScreen.classList.add("active");
+
+score = 0;
+
+scoreText.textContent = "0";
+
+playerY =
+game.clientHeight * .4;
+
+velocity = 0;
+
+pipes.forEach(pipe=>{
+
+pipe.top.remove();
+
+pipe.bottom.remove();
+
+});
+
+pipes = [];
+
+spawnTimer = 0;
+
+player.textContent =
+selectedAnimal;
+
+player.style.left =
+Math.min(
+game.clientWidth * .25,
+180
+) + "px";
+
+player.style.top =
+playerY + "px";
+
+gameOver.style.display =
+"none";
+
+running = true;
+
+startMusic();
+
+lastTime =
+performance.now();
+
+cancelAnimationFrame(animation);
+
+animation =
+requestAnimationFrame(loop);
+
+}
+
+
+/* ==========================================
    NHẢY
-========================= */
+========================================== */
 
 function jump(){
 
-  if(!running) return;
+if(!running) return;
 
-  velocity = -8.5;
+velocity = -8.5;
 
 }
 
+
 document.addEventListener(
-  "keydown",
-  e=>{
+"keydown",
+e=>{
 
-    if(
-      e.code === "Space" ||
-      e.code === "ArrowUp"
-    ){
+if(
+e.code === "Space" ||
+e.code === "ArrowUp"
+){
 
-      e.preventDefault();
+e.preventDefault();
 
-      jump();
+jump();
 
-    }
+}
 
-  }
-);
+});
+
 
 game.addEventListener(
-  "pointerdown",
-  ()=>{
+"pointerdown",
+()=>{
 
-    if(running){
-      jump();
-    }
+if(running) jump();
 
-  }
-);
+});
 
-/* =========================
+
+/* ==========================================
    TẠO ỐNG
-========================= */
+========================================== */
 
 function createPipe(){
 
-  const setting =
-    settings[difficulty];
+const setting =
+settings[difficulty];
 
-  const gameHeight =
-    game.clientHeight;
+const height =
+game.clientHeight;
 
-  const groundHeight =
-    gameHeight * .25;
+const ground =
+height * .25;
 
-  const maxTop =
-    gameHeight -
-    groundHeight -
-    setting.gap -
-    100;
+const maxTop =
+height -
+ground -
+setting.gap -
+100;
 
-  const minTop = 70;
+const minTop = 70;
 
-  const topHeight =
-    Math.random() *
-    (maxTop-minTop) +
-    minTop;
+const topHeight =
+Math.random() *
+(maxTop-minTop) +
+minTop;
 
-  const bottomHeight =
-    gameHeight -
-    groundHeight -
-    topHeight -
-    setting.gap;
+const bottomHeight =
+height -
+ground -
+topHeight -
+setting.gap;
 
-  const top =
-    document.createElement("div");
+const top =
+document.createElement("div");
 
-  top.className =
-    "pipe top";
+top.className =
+"pipe top";
 
-  top.style.height =
-    topHeight + "px";
+top.style.height =
+topHeight + "px";
 
-  top.style.left =
-    game.clientWidth + "px";
+top.style.left =
+game.clientWidth + "px";
 
-  const bottom =
-    document.createElement("div");
 
-  bottom.className =
-    "pipe bottom";
+const bottom =
+document.createElement("div");
 
-  bottom.style.height =
-    bottomHeight + "px";
+bottom.className =
+"pipe bottom";
 
-  bottom.style.left =
-    game.clientWidth + "px";
+bottom.style.height =
+bottomHeight + "px";
 
-  game.appendChild(top);
-  game.appendChild(bottom);
+bottom.style.left =
+game.clientWidth + "px";
 
-  pipes.push({
 
-    top,
-    bottom,
+game.appendChild(top);
 
-    x:game.clientWidth,
+game.appendChild(bottom);
 
-    topHeight,
 
-    bottomHeight,
+pipes.push({
 
-    passed:false
+top,
+bottom,
 
-  });
+x:game.clientWidth,
+
+topHeight,
+
+bottomHeight,
+
+passed:false
+
+});
 
 }
 
-/* =========================
-   COLLISION
-========================= */
+
+/* ==========================================
+   VA CHẠM
+========================================== */
 
 function collision(){
 
-  const px =
-    parseFloat(player.style.left);
+const px =
+parseFloat(player.style.left);
 
-  const py =
-    playerY;
+const py =
+playerY;
 
-  const pw =
-    player.offsetWidth;
+const pw =
+player.offsetWidth;
 
-  const ph =
-    player.offsetHeight;
+const ph =
+player.offsetHeight;
 
-  const ground =
-    game.clientHeight * .75;
+const ground =
+game.clientHeight * .75;
 
-  if(
-    py < 0 ||
-    py + ph > ground
-  ){
 
-    return true;
+if(
+py < 0 ||
+py + ph > ground
+){
 
-  }
-
-  for(const pipe of pipes){
-
-    const pipeWidth = 65;
-
-    const hitX =
-      px + pw > pipe.x &&
-      px < pipe.x + pipeWidth;
-
-    if(!hitX) continue;
-
-    const hitTop =
-      py < pipe.topHeight;
-
-    const gapBottom =
-      pipe.topHeight +
-      settings[difficulty].gap;
-
-    const hitBottom =
-      py + ph > gapBottom;
-
-    if(hitTop || hitBottom){
-
-      return true;
-
-    }
-
-  }
-
-  return false;
+return true;
 
 }
 
-/* =========================
+
+for(const pipe of pipes){
+
+const pipeWidth = 65;
+
+const hitX =
+px + pw > pipe.x &&
+px < pipe.x + pipeWidth;
+
+if(!hitX) continue;
+
+
+if(
+py < pipe.topHeight ||
+py + ph >
+pipe.topHeight +
+settings[difficulty].gap
+){
+
+return true;
+
+}
+
+}
+
+return false;
+
+}
+
+
+/* ==========================================
    GAME LOOP
-========================= */
+========================================== */
 
 function loop(time){
 
-  if(!running) return;
+if(!running) return;
 
-  const delta =
-    Math.min(
-      (time-lastTime)/16.67,
-      2
-    );
+const delta =
+Math.min(
+(time-lastTime)/16.67,
+2
+);
 
-  lastTime = time;
+lastTime = time;
 
-  const setting =
-    settings[difficulty];
+const setting =
+settings[difficulty];
 
-  velocity +=
-    0.42 * delta;
 
-  playerY +=
-    velocity * delta;
+velocity +=
+0.42 * delta;
 
-  player.style.top =
-    playerY + "px";
+playerY +=
+velocity * delta;
 
-  spawnTimer +=
-    delta * 16.67;
+player.style.top =
+playerY + "px";
 
-  if(spawnTimer >= setting.spawn){
 
-    spawnTimer = 0;
+spawnTimer +=
+delta * 16.67;
 
-    createPipe();
 
-  }
+if(spawnTimer >= setting.spawn){
 
-  for(let i=pipes.length-1;i>=0;i--){
+spawnTimer = 0;
 
-    const pipe = pipes[i];
-
-    pipe.x -=
-      setting.speed * delta;
-
-    pipe.top.style.left =
-      pipe.x + "px";
-
-    pipe.bottom.style.left =
-      pipe.x + "px";
-
-    if(
-      !pipe.passed &&
-      pipe.x + 65 <
-      parseFloat(player.style.left)
-    ){
-
-      pipe.passed = true;
-
-      score++;
-
-      scoreText.textContent =
-        score;
-
-    }
-
-    if(pipe.x < -100){
-
-      pipe.top.remove();
-      pipe.bottom.remove();
-
-      pipes.splice(i,1);
-
-    }
-
-  }
-
-  if(collision()){
-
-    endGame();
-
-    return;
-
-  }
-
-  animation =
-    requestAnimationFrame(loop);
+createPipe();
 
 }
 
-/* =========================
+
+for(let i=pipes.length-1;i>=0;i--){
+
+const pipe = pipes[i];
+
+pipe.x -=
+setting.speed * delta;
+
+pipe.top.style.left =
+pipe.x + "px";
+
+pipe.bottom.style.left =
+pipe.x + "px";
+
+
+if(
+!pipe.passed &&
+pipe.x + 65 <
+parseFloat(player.style.left)
+){
+
+pipe.passed = true;
+
+score++;
+
+scoreText.textContent =
+score;
+
+}
+
+
+if(pipe.x < -100){
+
+pipe.top.remove();
+
+pipe.bottom.remove();
+
+pipes.splice(i,1);
+
+}
+
+}
+
+
+if(collision()){
+
+endGame();
+
+return;
+
+}
+
+
+animation =
+requestAnimationFrame(loop);
+
+}
+
+
+/* ==========================================
    GAME OVER
-========================= */
+========================================== */
 
 function endGame(){
 
-  running = false;
+running = false;
 
-  cancelAnimationFrame(animation);
+cancelAnimationFrame(animation);
 
-  if(score > best){
+stopMusic();
 
-    best = score;
 
-    localStorage.setItem(
-      "animalJumpBest",
-      best
-    );
+if(score > best){
 
-  }
+best = score;
 
-  finalScore.textContent =
-    "🏆 Điểm: " + score;
-
-  bestScore.textContent =
-    "⭐ Kỷ lục: " + best;
-
-  gameOver.style.display =
-    "flex";
+localStorage.setItem(
+"animalJumpBest",
+best
+);
 
 }
 
-/* =========================
-   NÚT CHƠI LẠI
-========================= */
+
+finalScore.textContent =
+"🏆 Điểm: " + score;
+
+bestScore.textContent =
+"⭐ Kỷ lục: " + best;
+
+gameOver.style.display =
+"flex";
+
+}
+
+
+/* ==========================================
+   CHƠI LẠI
+========================================== */
 
 document.getElementById(
-  "retryBtn"
+"retryBtn"
 ).onclick = ()=>{
 
-  startGame();
+startGame();
 
 };
 
-/* =========================
+
+/* ==========================================
    VỀ MENU
-========================= */
+========================================== */
 
 document.getElementById(
-  "menuBtn"
+"menuBtn"
 ).onclick = ()=>{
 
-  running = false;
+running = false;
 
-  cancelAnimationFrame(animation);
+stopMusic();
 
-  pipes.forEach(pipe=>{
+cancelAnimationFrame(animation);
 
-    pipe.top.remove();
-    pipe.bottom.remove();
+pipes.forEach(pipe=>{
 
-  });
+pipe.top.remove();
 
-  pipes = [];
+pipe.bottom.remove();
 
-  gameOver.style.display =
-    "none";
+});
 
-  gameScreen.classList.remove("active");
+pipes = [];
 
-  menuScreen.classList.add("active");
+gameOver.style.display =
+"none";
+
+gameScreen.classList.remove("active");
+
+menuScreen.classList.add("active");
 
 };
 
