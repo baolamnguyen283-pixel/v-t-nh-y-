@@ -3,237 +3,392 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>🦆 Duck Jump</title>
+<title>Animal Jump</title>
 
 <style>
-
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    background: #222;
-    font-family: Arial, sans-serif;
     overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: #18232b;
 }
 
 canvas {
     display: block;
-    margin: auto;
-    background: #7ed0ed;
+    width: 100vw;
+    height: 100vh;
 }
 
-#score {
-    position: fixed;
-    top: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: white;
-    font-size: 34px;
-    font-weight: bold;
-    text-shadow: 3px 3px #333;
-    z-index: 5;
-}
-
-/* MÀN HÌNH MENU */
+/* ================= MENU ================= */
 
 #menu {
     position: fixed;
     inset: 0;
+    z-index: 10;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
     background:
         linear-gradient(
-            rgba(30,120,160,.65),
-            rgba(30,120,160,.65)
+            rgba(52, 160, 205, .82),
+            rgba(77, 184, 110, .82)
         );
 
     color: white;
-    z-index: 20;
-
     text-align: center;
 }
 
-#menu h1 {
+.title {
     font-size: 64px;
-    margin: 0 0 10px;
+    font-weight: 900;
+    margin-bottom: 5px;
 
-    text-shadow: 4px 4px #333;
+    text-shadow:
+        4px 4px 0 #31515c;
 }
 
-#menu h2 {
-    margin: 5px 0 20px;
+.subtitle {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
 }
 
+.section-title {
+    margin: 12px 0 8px;
+    font-size: 22px;
+}
+
+.animals,
 .difficulties {
     display: flex;
-    gap: 15px;
-    margin-bottom: 30px;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
-.difficulty {
+.choice {
     width: 120px;
-    padding: 15px;
+    min-height: 80px;
 
-    border: 3px solid white;
-    border-radius: 15px;
+    border: 3px solid rgba(255,255,255,.8);
+    border-radius: 18px;
 
     background: rgba(255,255,255,.2);
 
     color: white;
-
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
 
     cursor: pointer;
+
+    transition: .15s;
 }
 
-.difficulty:hover {
-    transform: scale(1.05);
+.choice:hover {
+    transform: translateY(-4px);
 }
 
-.difficulty.selected {
-    background: #ffd43b;
-    color: #333;
-    border-color: #fff;
+.choice.selected {
+    background: #ffd447;
+    color: #3b351d;
+    border-color: white;
+
+    box-shadow:
+        0 5px 0 rgba(120,80,0,.35);
 }
 
-#startButton {
-    padding: 16px 45px;
+.animal-icon {
+    display: block;
+    font-size: 36px;
+    margin-bottom: 3px;
+}
 
-    border: none;
-    border-radius: 15px;
+.start-button {
+    margin-top: 25px;
 
-    background: #ffca28;
+    border: 0;
+    border-radius: 18px;
+
+    padding: 16px 48px;
+
+    background: #ffb52e;
+    color: #3c2b0b;
 
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 900;
 
     cursor: pointer;
 
-    box-shadow: 0 5px 0 #b88900;
+    box-shadow:
+        0 6px 0 #b87808;
+
+    transition: .1s;
 }
 
-#startButton:active {
+.start-button:hover {
+    transform: translateY(-2px);
+}
+
+.start-button:active {
     transform: translateY(4px);
-    box-shadow: 0 1px 0 #b88900;
+    box-shadow: 0 2px 0 #b87808;
 }
 
+/* ================= SCORE ================= */
 
-/* GAME OVER */
+#score {
+    position: fixed;
+    top: 18px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 5;
+
+    color: white;
+
+    font-size: 38px;
+    font-weight: 900;
+
+    text-shadow:
+        3px 3px 0 #33464d;
+}
+
+#highScore {
+    position: fixed;
+    top: 62px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 5;
+
+    color: white;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    text-shadow:
+        2px 2px 0 #33464d;
+}
+
+/* ================= GAME OVER ================= */
 
 #gameOver {
     position: fixed;
     inset: 0;
 
+    z-index: 20;
+
     display: none;
 
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
     background: rgba(0,0,0,.55);
 
     color: white;
-
     text-align: center;
-
-    z-index: 15;
 }
 
 #gameOver h1 {
-    font-size: 60px;
     margin: 0;
+
+    font-size: 64px;
+
+    text-shadow:
+        4px 4px 0 #333;
 }
 
-#gameOver button {
-    padding: 14px 35px;
+#gameOver p {
+    font-size: 24px;
+}
+
+.retry-button {
+    padding: 15px 42px;
 
     border: none;
-    border-radius: 15px;
+    border-radius: 16px;
 
-    background: #ffca28;
+    background: #ffd447;
 
-    font-size: 22px;
+    font-size: 21px;
     font-weight: bold;
 
     cursor: pointer;
 }
 
+/* ================= MOBILE ================= */
+
+@media(max-width: 600px) {
+
+    .title {
+        font-size: 45px;
+    }
+
+    .choice {
+        width: 100px;
+        min-height: 70px;
+    }
+
+    .animal-icon {
+        font-size: 28px;
+    }
+
+    .start-button {
+        font-size: 20px;
+    }
+}
 </style>
 </head>
 
 <body>
 
-<div id="score">Điểm: 0</div>
-
-
-<!-- MENU CHỌN ĐỘ KHÓ -->
+<!-- ================= MENU ================= -->
 
 <div id="menu">
 
-    <h1>🦆 Duck Jump</h1>
+    <div class="title">ANIMAL JUMP</div>
 
-    <h2>Chọn độ khó</h2>
+    <div class="subtitle">
+        Chọn nhân vật và vượt qua những cây cột!
+    </div>
 
-    <div class="difficulties">
+    <div class="section-title">
+        Chọn con vật
+    </div>
+
+    <div class="animals">
 
         <button
-            class="difficulty selected"
-            data-mode="easy">
-            🟢 DỄ
+            class="choice animal-choice selected"
+            data-animal="duck">
+
+            <span class="animal-icon">🦆</span>
+            Vịt
+
         </button>
 
         <button
-            class="difficulty"
-            data-mode="normal">
-            🟡 VỪA
+            class="choice animal-choice"
+            data-animal="cat">
+
+            <span class="animal-icon">🐱</span>
+            Mèo
+
         </button>
 
         <button
-            class="difficulty"
-            data-mode="hard">
-            🔴 KHÓ
+            class="choice animal-choice"
+            data-animal="rabbit">
+
+            <span class="animal-icon">🐰</span>
+            Thỏ
+
+        </button>
+
+        <button
+            class="choice animal-choice"
+            data-animal="frog">
+
+            <span class="animal-icon">🐸</span>
+            Ếch
+
         </button>
 
     </div>
 
-    <button id="startButton">
-        BẮT ĐẦU CHƠI
+
+    <div class="section-title">
+        Chọn độ khó
+    </div>
+
+    <div class="difficulties">
+
+        <button
+            class="choice difficulty-choice selected"
+            data-mode="easy">
+
+            🟢 DỄ
+
+        </button>
+
+        <button
+            class="choice difficulty-choice"
+            data-mode="normal">
+
+            🟡 VỪA
+
+        </button>
+
+        <button
+            class="choice difficulty-choice"
+            data-mode="hard">
+
+            🔴 KHÓ
+
+        </button>
+
+    </div>
+
+
+    <button
+        class="start-button"
+        id="startButton">
+
+        ▶ BẮT ĐẦU CHƠI
+
     </button>
 
 </div>
 
 
-<!-- GAME OVER -->
+<!-- ================= SCORE ================= -->
+
+<div id="score">0</div>
+
+<div id="highScore">
+    Kỷ lục: 0
+</div>
+
+
+<!-- ================= GAME OVER ================= -->
 
 <div id="gameOver">
 
-    <h1>💥 GAME OVER</h1>
+    <h1>GAME OVER</h1>
 
-    <p id="result"></p>
+    <p id="result">
+        Bạn được 0 điểm
+    </p>
 
-    <button onclick="backToMenu()">
-        CHƠI LẠI
+    <button
+        class="retry-button"
+        id="retryButton">
+
+        🔄 CHƠI LẠI
+
     </button>
 
 </div>
 
 
-<canvas
-    id="game"
-    width="900"
-    height="550">
-</canvas>
+<canvas id="game"></canvas>
 
 
 <script>
+
+/* =====================================================
+   CANVAS
+===================================================== */
 
 const canvas =
     document.getElementById("game");
@@ -241,8 +396,27 @@ const canvas =
 const ctx =
     canvas.getContext("2d");
 
-const scoreText =
-    document.getElementById("score");
+
+function resizeCanvas() {
+
+    canvas.width =
+        window.innerWidth;
+
+    canvas.height =
+        window.innerHeight;
+}
+
+resizeCanvas();
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+/* =====================================================
+   MENU
+===================================================== */
 
 const menu =
     document.getElementById("menu");
@@ -250,26 +424,40 @@ const menu =
 const gameOverScreen =
     document.getElementById("gameOver");
 
-const result =
-    document.getElementById("result");
-
 const startButton =
     document.getElementById("startButton");
 
+const retryButton =
+    document.getElementById("retryButton");
 
-/* =========================
-   ĐỘ KHÓ
-========================= */
+const scoreText =
+    document.getElementById("score");
 
-const modes = {
+const highScoreText =
+    document.getElementById("highScore");
+
+const resultText =
+    document.getElementById("result");
+
+
+/* =====================================================
+   SETTINGS
+===================================================== */
+
+let selectedAnimal = "duck";
+
+let selectedMode = "easy";
+
+
+const difficulty = {
 
     easy: {
 
         speed: 3,
 
-        gap: 190,
+        gap: 210,
 
-        spawn: 2200
+        spawn: 2300
 
     },
 
@@ -277,9 +465,9 @@ const modes = {
 
         speed: 4,
 
-        gap: 165,
+        gap: 175,
 
-        spawn: 1900
+        spawn: 1950
 
     },
 
@@ -287,35 +475,59 @@ const modes = {
 
         speed: 5.5,
 
-        gap: 140,
+        gap: 145,
 
-        spawn: 1650
+        spawn: 1700
 
     }
 
 };
 
 
-let selectedMode = "easy";
+/* =====================================================
+   CHỌN CON VẬT
+===================================================== */
 
-let difficulty = modes.easy;
-
-
-/* =========================
-   CHỌN ĐỘ KHÓ
-========================= */
-
-document.querySelectorAll(
-    ".difficulty"
-).forEach(button => {
+document
+.querySelectorAll(".animal-choice")
+.forEach(button => {
 
     button.addEventListener(
         "click",
         function() {
 
-            document.querySelectorAll(
-                ".difficulty"
-            ).forEach(b =>
+            document
+            .querySelectorAll(".animal-choice")
+            .forEach(b =>
+                b.classList.remove("selected")
+            );
+
+            this.classList.add("selected");
+
+            selectedAnimal =
+                this.dataset.animal;
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+   CHỌN ĐỘ KHÓ
+===================================================== */
+
+document
+.querySelectorAll(".difficulty-choice")
+.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        function() {
+
+            document
+            .querySelectorAll(".difficulty-choice")
+            .forEach(b =>
                 b.classList.remove("selected")
             );
 
@@ -324,18 +536,15 @@ document.querySelectorAll(
             selectedMode =
                 this.dataset.mode;
 
-            difficulty =
-                modes[selectedMode];
-
         }
     );
 
 });
 
 
-/* =========================
-   GAME
-========================= */
+/* =====================================================
+   GAME VARIABLES
+===================================================== */
 
 let playing = false;
 
@@ -345,41 +554,56 @@ let score = 0;
 
 let pipes = [];
 
+let lastPipe = 0;
 
-/* =========================
-   VỊT
-========================= */
 
-const duck = {
+/* =====================================================
+   HIGH SCORE
+===================================================== */
 
-    x: 180,
+let highScore =
+    Number(
+        localStorage.getItem(
+            "animalJumpHighScore"
+        )
+    ) || 0;
 
-    y: 250,
+highScoreText.textContent =
+    "Kỷ lục: " + highScore;
 
-    width: 55,
 
-    height: 42,
+/* =====================================================
+   PLAYER
+===================================================== */
+
+const player = {
+
+    x: 160,
+
+    y: 300,
+
+    width: 58,
+
+    height: 48,
 
     velocity: 0
 
 };
 
 
-const gravity = .48;
+const gravity = 0.5;
 
-const jumpPower = -8.5;
+const jumpPower = -9;
 
 
-/* =========================
-   BẮT ĐẦU
-========================= */
+/* =====================================================
+   START GAME
+===================================================== */
 
-startButton.onclick =
-function() {
-
-    startGame();
-
-};
+startButton.addEventListener(
+    "click",
+    startGame
+);
 
 
 function startGame() {
@@ -392,14 +616,17 @@ function startGame() {
 
     pipes = [];
 
-    duck.x = 180;
+    lastPipe = 0;
 
-    duck.y = 250;
+    player.x = 160;
 
-    duck.velocity = 0;
+    player.y =
+        canvas.height / 2;
+
+    player.velocity = 0;
 
     scoreText.textContent =
-        "Điểm: 0";
+        "0";
 
     menu.style.display =
         "none";
@@ -412,22 +639,23 @@ function startGame() {
 }
 
 
-/* =========================
-   NHẢY
-========================= */
+/* =====================================================
+   JUMP
+===================================================== */
 
 function jump() {
 
     if (!playing ||
         gameOver) return;
 
-    duck.velocity =
+    player.velocity =
         jumpPower;
 
 }
 
 
-/* SPACE */
+/* SPACE
+===================================================== */
 
 document.addEventListener(
     "keydown",
@@ -445,77 +673,329 @@ document.addEventListener(
 );
 
 
-/* CLICK */
+/* CLICK
+===================================================== */
 
 canvas.addEventListener(
-    "click",
+    "pointerdown",
     jump
 );
 
 
-/* =========================
-   TẠO CỘT
-========================= */
+/* =====================================================
+   CREATE PIPE
+===================================================== */
 
 function createPipe() {
 
+    const d =
+        difficulty[selectedMode];
+
+    const minTop = 80;
+
+    const maxTop =
+        canvas.height - 250;
+
     const top =
-        Math.floor(
-            Math.random() * 230
-        ) + 40;
+        minTop +
+        Math.random() *
+        (maxTop - minTop);
 
     pipes.push({
 
-        x: canvas.width + 50,
+        x:
+            canvas.width + 50,
 
-        width: 85,
+        width:
+            90,
 
-        top: top,
+        top:
+            top,
 
         bottom:
-            top + difficulty.gap,
+            top + d.gap,
 
-        passed: false
+        passed:
+            false
 
     });
 
 }
 
 
-/* =========================
-   TẠO CỘT THEO ĐỘ KHÓ
-========================= */
+/* =====================================================
+   DRAW BACKGROUND
+===================================================== */
 
-let lastPipeTime = 0;
+function drawBackground() {
 
-function pipeSpawner(time) {
+    const sky =
+        ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            canvas.height
+        );
 
-    if (
-        playing &&
-        !gameOver &&
-        time - lastPipeTime >
-        difficulty.spawn
+    sky.addColorStop(
+        0,
+        "#65c8eb"
+    );
+
+    sky.addColorStop(
+        1,
+        "#d8f7ff"
+    );
+
+    ctx.fillStyle =
+        sky;
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* SUN */
+
+    ctx.fillStyle =
+        "#ffe27a";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        canvas.width - 100,
+        90,
+        45,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* CLOUDS */
+
+    drawCloud(
+        120,
+        100,
+        35
+    );
+
+    drawCloud(
+        canvas.width * .55,
+        150,
+        30
+    );
+
+    drawCloud(
+        canvas.width * .82,
+        70,
+        28
+    );
+
+}
+
+
+/* =====================================================
+   CLOUD
+===================================================== */
+
+function drawCloud(
+    x,
+    y,
+    size
+) {
+
+    ctx.fillStyle =
+        "rgba(255,255,255,.85)";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y,
+        size,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.arc(
+        x + size,
+        y - size * .3,
+        size * .8,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.arc(
+        x + size * 2,
+        y,
+        size,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+}
+
+
+/* =====================================================
+   DRAW PIPES
+===================================================== */
+
+function drawPipe(pipe) {
+
+    const x =
+        pipe.x;
+
+    const w =
+        pipe.width;
+
+
+    /* thân */
+
+    ctx.fillStyle =
+        "#258c3c";
+
+    ctx.fillRect(
+        x,
+        0,
+        w,
+        pipe.top
+    );
+
+
+    ctx.fillRect(
+        x,
+        pipe.bottom,
+        w,
+        canvas.height -
+        pipe.bottom
+    );
+
+
+    /* đầu cột */
+
+    ctx.fillStyle =
+        "#45b954";
+
+    ctx.fillRect(
+        x - 7,
+        pipe.top - 25,
+        w + 14,
+        25
+    );
+
+    ctx.fillRect(
+        x - 7,
+        pipe.bottom,
+        w + 14,
+        25
+    );
+
+
+    /* highlight */
+
+    ctx.fillStyle =
+        "rgba(255,255,255,.15)";
+
+    ctx.fillRect(
+        x + 12,
+        0,
+        9,
+        pipe.top
+    );
+
+    ctx.fillRect(
+        x + 12,
+        pipe.bottom,
+        9,
+        canvas.height -
+        pipe.bottom
+    );
+
+
+    /* viền */
+
+    ctx.strokeStyle =
+        "#17662b";
+
+    ctx.lineWidth =
+        4;
+
+    ctx.strokeRect(
+        x,
+        0,
+        w,
+        pipe.top
+    );
+
+    ctx.strokeRect(
+        x,
+        pipe.bottom,
+        w,
+        canvas.height -
+        pipe.bottom
+    );
+
+}
+
+
+/* =====================================================
+   DRAW PLAYER
+===================================================== */
+
+function drawPlayer() {
+
+    const x =
+        player.x;
+
+    const y =
+        player.y;
+
+
+    if (selectedAnimal === "duck") {
+
+        drawDuck(x, y);
+
+    }
+
+    else if (
+        selectedAnimal === "cat"
     ) {
 
-        createPipe();
+        drawCat(x, y);
 
-        lastPipeTime = time;
+    }
+
+    else if (
+        selectedAnimal === "rabbit"
+    ) {
+
+        drawRabbit(x, y);
+
+    }
+
+    else if (
+        selectedAnimal === "frog"
+    ) {
+
+        drawFrog(x, y);
 
     }
 
 }
 
 
-/* =========================
-   VẼ VỊT
-========================= */
+/* =====================================================
+   DUCK
+===================================================== */
 
-function drawDuck() {
-
-    const x = duck.x;
-
-    const y = duck.y;
-
+function drawDuck(x, y) {
 
     /* thân */
 
@@ -526,9 +1006,9 @@ function drawDuck() {
 
     ctx.ellipse(
         x + 27,
-        y + 25,
-        25,
-        18,
+        y + 28,
+        27,
+        19,
         0,
         0,
         Math.PI * 2
@@ -540,16 +1020,16 @@ function drawDuck() {
     /* cánh */
 
     ctx.fillStyle =
-        "#f3b927";
+        "#efa91d";
 
     ctx.beginPath();
 
     ctx.ellipse(
-        x + 20,
-        y + 28,
-        13,
-        8,
-        -.4,
+        x + 19,
+        y + 30,
+        14,
+        9,
+        -.3,
         0,
         Math.PI * 2
     );
@@ -560,14 +1040,14 @@ function drawDuck() {
     /* đầu */
 
     ctx.fillStyle =
-        "#ffdf45";
+        "#ffe24d";
 
     ctx.beginPath();
 
     ctx.arc(
         x + 43,
-        y + 13,
-        18,
+        y + 14,
+        19,
         0,
         Math.PI * 2
     );
@@ -578,12 +1058,12 @@ function drawDuck() {
     /* mỏ */
 
     ctx.fillStyle =
-        "#ef8c24";
+        "#ed8124";
 
     ctx.beginPath();
 
     ctx.moveTo(
-        x + 58,
+        x + 57,
         y + 13
     );
 
@@ -593,8 +1073,8 @@ function drawDuck() {
     );
 
     ctx.lineTo(
-        x + 58,
-        y + 25
+        x + 57,
+        y + 27
     );
 
     ctx.closePath();
@@ -604,14 +1084,206 @@ function drawDuck() {
 
     /* mắt */
 
+    drawEye(
+        x + 49,
+        y + 8
+    );
+
+}
+
+
+/* =====================================================
+   CAT
+===================================================== */
+
+function drawCat(x, y) {
+
     ctx.fillStyle =
-        "#111";
+        "#f2a65a";
+
+
+    /* tai */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x + 8,
+        y + 15
+    );
+
+    ctx.lineTo(
+        x + 13,
+        y - 5
+    );
+
+    ctx.lineTo(
+        x + 25,
+        y + 10
+    );
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x + 38,
+        y + 10
+    );
+
+    ctx.lineTo(
+        x + 50,
+        y - 5
+    );
+
+    ctx.lineTo(
+        x + 55,
+        y + 18
+    );
+
+    ctx.fill();
+
+
+    /* đầu */
 
     ctx.beginPath();
 
     ctx.arc(
-        x + 49,
-        y + 8,
+        x + 31,
+        y + 25,
+        25,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* thân */
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x + 25,
+        y + 44,
+        25,
+        15,
+        0,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    drawEye(
+        x + 23,
+        y + 20
+    );
+
+    drawEye(
+        x + 39,
+        y + 20
+    );
+
+}
+
+
+/* =====================================================
+   RABBIT
+===================================================== */
+
+function drawRabbit(x, y) {
+
+    ctx.fillStyle =
+        "#f5f5f5";
+
+
+    /* tai */
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x + 18,
+        y + 2,
+        9,
+        28,
+        -.15,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x + 42,
+        y + 2,
+        9,
+        28,
+        .15,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* đầu */
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x + 30,
+        y + 28,
+        24,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* thân */
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x + 25,
+        y + 47,
+        25,
+        14,
+        0,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    drawEye(
+        x + 22,
+        y + 23
+    );
+
+    drawEye(
+        x + 38,
+        y + 23
+    );
+
+
+    /* mũi */
+
+    ctx.fillStyle =
+        "#ef8aaa";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x + 30,
+        y + 31,
         4,
         0,
         Math.PI * 2
@@ -622,71 +1294,210 @@ function drawDuck() {
 }
 
 
-/* =========================
-   VẼ CỘT
-========================= */
+/* =====================================================
+   FROG
+===================================================== */
 
-function drawPipe(pipe) {
+function drawFrog(x, y) {
 
     ctx.fillStyle =
-        "#2e9e44";
+        "#58bd45";
 
 
-    /* cột trên */
+    /* đầu */
 
-    ctx.fillRect(
-        pipe.x,
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x + 30,
+        y + 28,
+        29,
+        22,
         0,
-        pipe.width,
-        pipe.top
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* mắt trái */
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x + 13,
+        y + 12,
+        11,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* mắt phải */
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x + 47,
+        y + 12,
+        11,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* con ngươi */
+
+    drawEye(
+        x + 13,
+        y + 12
+    );
+
+    drawEye(
+        x + 47,
+        y + 12
     );
 
 
-    /* đầu cột trên */
+    /* miệng */
+
+    ctx.strokeStyle =
+        "#176c2b";
+
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x + 30,
+        y + 29,
+        13,
+        0,
+        Math.PI
+    );
+
+    ctx.stroke();
+
+}
+
+
+/* =====================================================
+   EYE
+===================================================== */
+
+function drawEye(x, y) {
 
     ctx.fillStyle =
-        "#42b956";
+        "white";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y,
+        6,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.fillStyle =
+        "#111";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x + 1,
+        y,
+        3,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+}
+
+
+/* =====================================================
+   GROUND
+===================================================== */
+
+function drawGround() {
+
+    const ground =
+        canvas.height - 55;
+
+
+    ctx.fillStyle =
+        "#78c84a";
 
     ctx.fillRect(
-        pipe.x - 8,
-        pipe.top - 28,
-        pipe.width + 16,
-        28
+        0,
+        ground,
+        canvas.width,
+        55
     );
 
 
-    /* cột dưới */
+    /* cỏ */
 
     ctx.fillStyle =
-        "#2e9e44";
+        "#9bdd58";
 
-    ctx.fillRect(
-        pipe.x,
-        pipe.bottom,
-        pipe.width,
-        canvas.height -
-        pipe.bottom
-    );
+    for (
+        let x = 0;
+        x < canvas.width;
+        x += 20
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            ground
+        );
+
+        ctx.lineTo(
+            x + 7,
+            ground - 9
+        );
+
+        ctx.lineTo(
+            x + 13,
+            ground
+        );
+
+        ctx.fill();
+
+    }
 
 
-    /* đầu cột dưới */
+    /* đất */
 
     ctx.fillStyle =
-        "#42b956";
+        "#a87342";
 
     ctx.fillRect(
-        pipe.x - 8,
-        pipe.bottom,
-        pipe.width + 16,
-        28
+        0,
+        canvas.height - 18,
+        canvas.width,
+        18
     );
 
 }
 
 
-/* =========================
+/* =====================================================
    UPDATE
-========================= */
+===================================================== */
 
 function update() {
 
@@ -694,39 +1505,51 @@ function update() {
         gameOver) return;
 
 
-    duck.velocity +=
+    const d =
+        difficulty[selectedMode];
+
+
+    /* trọng lực */
+
+    player.velocity +=
         gravity;
 
-    duck.y +=
-        duck.velocity;
+    player.y +=
+        player.velocity;
 
 
-    for (let pipe of pipes) {
+    /* cột */
+
+    for (
+        const pipe of pipes
+    ) {
 
         pipe.x -=
-            difficulty.speed;
+            d.speed;
 
-
-        /* va chạm */
 
         const hitX =
-            duck.x +
-            duck.width >
+            player.x +
+            player.width >
             pipe.x &&
-            duck.x <
+            player.x <
             pipe.x +
             pipe.width;
 
+
         const hitY =
-            duck.y <
+            player.y <
             pipe.top ||
 
-            duck.y +
-            duck.height >
+            player.y +
+            player.height >
             pipe.bottom;
 
 
-        if (hitX && hitY) {
+        if (
+            hitX &&
+            hitY
+        ) {
 
             endGame();
 
@@ -739,7 +1562,7 @@ function update() {
             !pipe.passed &&
             pipe.x +
             pipe.width <
-            duck.x
+            player.x
         ) {
 
             pipe.passed = true;
@@ -747,7 +1570,7 @@ function update() {
             score++;
 
             scoreText.textContent =
-                "Điểm: " + score;
+                score;
 
         }
 
@@ -756,25 +1579,29 @@ function update() {
 
     pipes =
         pipes.filter(
-            p => p.x > -120
+            p =>
+            p.x >
+            -150
         );
 
 
-    /* đụng trần */
+    /* trần */
 
-    if (duck.y < 0) {
+    if (
+        player.y < 0
+    ) {
 
         endGame();
 
     }
 
 
-    /* đụng đất */
+    /* đất */
 
     if (
-        duck.y +
-        duck.height >
-        canvas.height - 50
+        player.y +
+        player.height >
+        canvas.height - 55
     ) {
 
         endGame();
@@ -784,9 +1611,9 @@ function update() {
 }
 
 
-/* =========================
+/* =====================================================
    GAME OVER
-========================= */
+===================================================== */
 
 function endGame() {
 
@@ -796,8 +1623,32 @@ function endGame() {
 
     playing = false;
 
-    result.innerHTML =
-        `Bạn được <b>${score}</b> điểm!`;
+
+    if (
+        score >
+        highScore
+    ) {
+
+        highScore =
+            score;
+
+        localStorage.setItem(
+            "animalJumpHighScore",
+            highScore
+        );
+
+    }
+
+
+    highScoreText.textContent =
+        "Kỷ lục: " +
+        highScore;
+
+
+    resultText.innerHTML =
+        `Điểm của bạn: <b>${score}</b><br>
+         Kỷ lục: <b>${highScore}</b>`;
+
 
     gameOverScreen.style.display =
         "flex";
@@ -805,95 +1656,35 @@ function endGame() {
 }
 
 
-/* =========================
-   QUAY LẠI MENU
-========================= */
+/* =====================================================
+   RETRY
+===================================================== */
 
-function backToMenu() {
+retryButton.addEventListener(
+    "click",
+    function() {
 
-    gameOverScreen.style.display =
-        "none";
+        gameOverScreen.style.display =
+            "none";
 
-    menu.style.display =
-        "flex";
+        menu.style.display =
+            "flex";
 
-}
+    }
+);
 
 
-/* =========================
-   VẼ
-========================= */
+/* =====================================================
+   DRAW
+===================================================== */
 
 function draw() {
 
-    /* trời */
+    drawBackground();
 
-    const sky =
-        ctx.createLinearGradient(
-            0,
-            0,
-            0,
-            canvas.height
-        );
-
-    sky.addColorStop(
-        0,
-        "#73cbea"
-    );
-
-    sky.addColorStop(
-        1,
-        "#d8f7ff"
-    );
-
-    ctx.fillStyle = sky;
-
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    /* mây */
-
-    ctx.fillStyle =
-        "rgba(255,255,255,.8)";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        130,
-        90,
-        30,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.arc(
-        170,
-        80,
-        25,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.arc(
-        205,
-        90,
-        30,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    /* cột */
 
     for (
-        let pipe of pipes
+        const pipe of pipes
     ) {
 
         drawPipe(pipe);
@@ -901,54 +1692,58 @@ function draw() {
     }
 
 
-    /* đất */
-
-    ctx.fillStyle =
-        "#75c442";
-
-    ctx.fillRect(
-        0,
-        canvas.height - 50,
-        canvas.width,
-        50
-    );
+    drawGround();
 
 
-    ctx.fillStyle =
-        "#9b6b3d";
+    if (playing) {
 
-    ctx.fillRect(
-        0,
-        canvas.height - 15,
-        canvas.width,
-        15
-    );
+        drawPlayer();
 
-
-    /* vịt */
-
-    drawDuck();
+    }
 
 }
 
 
-/* =========================
+/* =====================================================
    GAME LOOP
-========================= */
+===================================================== */
 
-function loop(time) {
+function gameLoop(time) {
 
-    pipeSpawner(time);
+    if (
+        playing &&
+        !gameOver
+    ) {
 
-    update();
+        if (
+            time - lastPipe >
+            difficulty[selectedMode].spawn
+        ) {
+
+            createPipe();
+
+            lastPipe =
+                time;
+
+        }
+
+        update();
+
+    }
+
 
     draw();
 
-    requestAnimationFrame(loop);
+    requestAnimationFrame(
+        gameLoop
+    );
 
 }
 
-requestAnimationFrame(loop);
+
+requestAnimationFrame(
+    gameLoop
+);
 
 </script>
 
