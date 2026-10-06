@@ -2,547 +2,659 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Animal Jump</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-html,body{
- margin:0;
- width:100%;
- height:100%;
- overflow:hidden;
- font-family:Arial,sans-serif;
- background:#18252c;
+body{
+  font-family:Arial, sans-serif;
+  background:linear-gradient(135deg,#87ceeb,#dff8ff);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+
+#app{
+  width:100%;
+  max-width:500px;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:15px;
+}
+
+/* ================= MENU ================= */
+
+.screen{
+  width:100%;
+  max-width:430px;
+  background:rgba(255,255,255,.96);
+  border-radius:25px;
+  padding:25px;
+  box-shadow:0 15px 40px rgba(0,0,0,.18);
+  text-align:center;
+}
+
+.hidden{
+  display:none !important;
+}
+
+h1{
+  font-size:42px;
+  margin-bottom:5px;
+}
+
+.subtitle{
+  color:#666;
+  margin-bottom:20px;
+}
+
+label{
+  display:block;
+  text-align:left;
+  font-weight:bold;
+  margin:12px 0 6px;
+}
+
+input{
+  width:100%;
+  padding:13px;
+  border:2px solid #ddd;
+  border-radius:12px;
+  font-size:16px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#4caf50;
+}
+
+.difficulties{
+  display:flex;
+  gap:8px;
+}
+
+.difficulty{
+  flex:1;
+  border:2px solid #ddd;
+  background:white;
+  padding:11px 5px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.difficulty.active{
+  background:#4caf50;
+  color:white;
+  border-color:#4caf50;
+}
+
+.main-btn{
+  width:100%;
+  border:0;
+  background:#4caf50;
+  color:white;
+  font-size:19px;
+  font-weight:bold;
+  padding:14px;
+  border-radius:14px;
+  cursor:pointer;
+  margin-top:18px;
+  box-shadow:0 5px 0 #388e3c;
+}
+
+.main-btn:active{
+  transform:translateY(4px);
+  box-shadow:0 1px 0 #388e3c;
+}
+
+/* ================= CHARACTER ================= */
+
+.character-title{
+  font-size:28px;
+  margin-bottom:5px;
+}
+
+.character-info{
+  color:#666;
+  margin-bottom:15px;
+}
+
+.animal-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+  max-height:390px;
+  overflow-y:auto;
+  padding:5px;
+}
+
+.animal{
+  background:#f4f4f4;
+  border:2px solid transparent;
+  border-radius:13px;
+  padding:8px 3px;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.animal:hover{
+  transform:scale(1.05);
+}
+
+.animal.selected{
+  background:#e8f5e9;
+  border-color:#4caf50;
+}
+
+.animal-emoji{
+  font-size:30px;
+  display:block;
+}
+
+.animal-name{
+  font-size:10px;
+  margin-top:3px;
+  color:#444;
+}
+
+.selected-name{
+  margin-top:12px;
+  font-weight:bold;
+  color:#4caf50;
+  min-height:20px;
+}
+
+/* ================= GAME ================= */
+
+#gameScreen{
+  position:relative;
+  width:100%;
+  height:100vh;
+  max-width:500px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
 canvas{
- width:100%;
- height:100%;
- display:block;
+  width:100%;
+  height:auto;
+  max-height:100vh;
+  background:linear-gradient(#8ed6ff,#d9f5ff);
+  display:block;
+  border-radius:15px;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
 }
 
-#menu{
- position:fixed;
- inset:0;
- z-index:10;
- overflow:auto;
- padding:20px;
- text-align:center;
- color:white;
-
- background:
- linear-gradient(
-  180deg,
-  rgba(44,157,201,.95),
-  rgba(69,166,91,.95)
- );
-
- display:flex;
- flex-direction:column;
- align-items:center;
+#gameUI{
+  position:absolute;
+  top:15px;
+  left:15px;
+  right:15px;
+  display:flex;
+  justify-content:space-between;
+  pointer-events:none;
 }
 
-.logo{
- font-size:55px;
- font-weight:900;
- text-shadow:4px 4px #34535d;
- margin:5px 0;
+.scoreBox{
+  background:rgba(0,0,0,.45);
+  color:white;
+  padding:8px 13px;
+  border-radius:12px;
+  font-weight:bold;
 }
 
-#playerName{
- width:300px;
- padding:12px;
- border-radius:14px;
- border:3px solid white;
- outline:none;
- text-align:center;
- font-size:18px;
- font-weight:bold;
- margin:8px;
+#musicBtn{
+  pointer-events:auto;
+  border:0;
+  background:rgba(255,255,255,.85);
+  border-radius:50%;
+  width:42px;
+  height:42px;
+  cursor:pointer;
+  font-size:20px;
 }
 
-.title{
- font-size:20px;
- font-weight:bold;
- margin:8px;
+/* ================= GAME OVER ================= */
+
+#gameOver{
+  position:absolute;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:rgba(0,0,0,.4);
 }
 
-.animals{
- width:min(760px,95vw);
- display:grid;
- grid-template-columns:repeat(5,1fr);
- gap:8px;
+.game-over-box{
+  width:85%;
+  background:white;
+  border-radius:22px;
+  padding:25px;
+  text-align:center;
 }
 
-.choice{
- min-height:67px;
- border:3px solid white;
- border-radius:14px;
- background:rgba(255,255,255,.16);
- color:white;
- cursor:pointer;
- font-weight:bold;
+.game-over-box h2{
+  font-size:32px;
+  margin-bottom:10px;
 }
 
-.choice:hover{
- transform:scale(1.04);
+.result-animal{
+  font-size:60px;
+  margin:10px;
 }
 
-.choice.selected{
- background:#ffd447;
- color:#332600;
+.result-score{
+  font-size:22px;
+  margin:8px;
 }
 
-.icon{
- display:block;
- font-size:27px;
+.best{
+  color:#ff9800;
+  font-weight:bold;
 }
 
-.modes{
- display:flex;
- gap:8px;
-}
+/* ================= RESPONSIVE ================= */
 
-.mode{
- width:100px;
-}
+@media(max-width:400px){
+  .screen{
+    padding:18px;
+  }
 
-#start{
- margin:18px;
- padding:14px 45px;
- border:0;
- border-radius:16px;
- background:#ffc332;
- color:#3c2c00;
- font-size:22px;
- font-weight:900;
- cursor:pointer;
- box-shadow:0 6px #a36d08;
-}
+  h1{
+    font-size:35px;
+  }
 
-#music{
- position:fixed;
- right:15px;
- top:15px;
- z-index:30;
-
- padding:10px 15px;
- border:0;
- border-radius:12px;
-
- background:white;
- font-weight:bold;
- cursor:pointer;
-}
-
-#score{
- position:fixed;
- top:10px;
- left:50%;
- transform:translateX(-50%);
- z-index:5;
-
- color:white;
- font-size:38px;
- font-weight:900;
-
- text-shadow:3px 3px #263b43;
-}
-
-#playerLabel{
- position:fixed;
- top:58px;
- left:50%;
- transform:translateX(-50%);
- z-index:5;
-
- color:white;
- font-weight:bold;
- text-shadow:2px 2px #263b43;
-}
-
-#over{
- position:fixed;
- inset:0;
- z-index:20;
- display:none;
-
- flex-direction:column;
- align-items:center;
- justify-content:center;
-
- background:rgba(0,0,0,.6);
- color:white;
- text-align:center;
-}
-
-#over h1{
- font-size:60px;
- margin:0;
-}
-
-#again{
- padding:13px 38px;
- border:0;
- border-radius:14px;
- background:#ffd447;
- font-size:20px;
- font-weight:bold;
- cursor:pointer;
-}
-
-@media(max-width:700px){
-
- .animals{
-  grid-template-columns:repeat(4,1fr);
- }
-
- .logo{
-  font-size:40px;
- }
-
- .choice{
-  font-size:11px;
- }
-
- .icon{
-  font-size:23px;
- }
+  .animal-grid{
+    grid-template-columns:repeat(4,1fr);
+  }
 }
 </style>
 </head>
 
 <body>
 
-<button id="music">🔇 Nhạc: Tắt</button>
+<div id="app">
 
-<div id="menu">
+  <!-- ================= MÀN HÌNH CHÍNH ================= -->
 
-<div class="logo">🐾 ANIMAL JUMP</div>
+  <div id="menuScreen" class="screen">
 
-<div>Vượt qua cột và lập kỷ lục!</div>
+    <h1>🐾 Animal Jump</h1>
 
-<input
- id="playerName"
- maxlength="16"
- placeholder="Nhập tên của bạn"
->
+    <div class="subtitle">
+      Trò chơi nhảy qua cột!
+    </div>
 
-<div class="title">🐾 Chọn con vật</div>
+    <label>Tên người chơi</label>
+    <input id="playerName" type="text" maxlength="15"
+           placeholder="Nhập tên của bạn">
 
-<div class="animals" id="animals"></div>
+    <label>Độ khó</label>
 
-<div class="title">⚡ Độ khó</div>
+    <div class="difficulties">
 
-<div class="modes">
+      <button class="difficulty active" data-level="easy">
+        🟢 Dễ
+      </button>
 
-<button class="choice mode selected" data-mode="easy">
-🟢 DỄ
-</button>
+      <button class="difficulty" data-level="normal">
+        🟡 Thường
+      </button>
 
-<button class="choice mode" data-mode="normal">
-🟡 VỪA
-</button>
+      <button class="difficulty" data-level="hard">
+        🔴 Khó
+      </button>
 
-<button class="choice mode" data-mode="hard">
-🔴 KHÓ
-</button>
+    </div>
+
+    <button id="startButton" class="main-btn">
+      ▶ BẮT ĐẦU
+    </button>
+
+  </div>
+
+
+  <!-- ================= CHỌN NHÂN VẬT ================= -->
+
+  <div id="characterScreen" class="screen hidden">
+
+    <div class="character-title">
+      🐾 Chọn nhân vật
+    </div>
+
+    <div class="character-info">
+      Chọn con vật bạn muốn điều khiển
+    </div>
+
+    <div id="animalGrid" class="animal-grid"></div>
+
+    <div id="selectedName" class="selected-name">
+      Chưa chọn nhân vật
+    </div>
+
+    <button id="playButton" class="main-btn">
+      🚀 CHƠI NGAY
+    </button>
+
+  </div>
+
+
+  <!-- ================= GAME ================= -->
+
+  <div id="gameScreen" class="hidden">
+
+    <canvas id="gameCanvas" width="400" height="700"></canvas>
+
+    <div id="gameUI">
+
+      <div class="scoreBox">
+        ⭐ <span id="score">0</span>
+      </div>
+
+      <button id="musicBtn">
+        🔊
+      </button>
+
+    </div>
+
+
+    <!-- GAME OVER -->
+
+    <div id="gameOver" class="hidden">
+
+      <div class="game-over-box">
+
+        <h2>💥 Game Over!</h2>
+
+        <div id="resultAnimal" class="result-animal">
+          🐤
+        </div>
+
+        <div id="resultText">
+        </div>
+
+        <div class="result-score">
+          Điểm: <b id="finalScore">0</b>
+        </div>
+
+        <div class="best">
+          🏆 Kỷ lục: <span id="bestScore">0</span>
+        </div>
+
+        <button id="retryButton" class="main-btn">
+          🔄 CHƠI LẠI
+        </button>
+
+        <button id="characterAgainButton"
+                class="main-btn"
+                style="background:#2196f3;box-shadow:0 5px 0 #1976d2;">
+          🐾 ĐỔI NHÂN VẬT
+        </button>
+
+        <button id="menuButton"
+                class="main-btn"
+                style="background:#777;box-shadow:0 5px 0 #555;">
+          🏠 MENU
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </div>
 
-<button id="start">▶ BẮT ĐẦU CHƠI</button>
-
-</div>
-
-<div id="score">0</div>
-
-<div id="playerLabel"></div>
-
-<div id="over">
-
-<h1>GAME OVER</h1>
-
-<div id="result"></div>
-
-<br>
-
-<button id="again">🔄 VỀ MENU</button>
-
-</div>
-
-<canvas id="game"></canvas>
 
 <script>
 
-/* =========================================
-  40 CON VẬT
-========================================= */
+/* =====================================================
+   DANH SÁCH NHÂN VẬT
+===================================================== */
 
-const animals=[
+const animals = [
 
-["duck","🦆","Vịt"],
-["cat","🐱","Mèo"],
-["dog","🐶","Chó"],
-["rabbit","🐰","Thỏ"],
-["frog","🐸","Ếch"],
-["panda","🐼","Gấu trúc"],
-["fox","🦊","Cáo"],
-["bee","🐝","Ong"],
-["penguin","🐧","Cánh cụt"],
-["bear","🐻","Gấu"],
+  ["duck","🐤","Vịt"],
+  ["cat","🐱","Mèo"],
+  ["dog","🐶","Chó"],
+  ["rabbit","🐰","Thỏ"],
+  ["frog","🐸","Ếch"],
+  ["panda","🐼","Gấu trúc"],
+  ["fox","🦊","Cáo"],
+  ["bee","🐝","Ong"],
+  ["penguin","🐧","Chim cánh cụt"],
+  ["bear","🐻","Gấu"],
 
-["koala","🐨","Koala"],
-["tiger","🐯","Hổ"],
-["lion","🦁","Sư tử"],
-["cow","🐮","Bò"],
-["pig","🐷","Heo"],
-["mouse","🐭","Chuột"],
-["hamster","🐹","Hamster"],
-["monkey","🐵","Khỉ"],
-["chicken","🐔","Gà"],
-["chick","🐤","Gà con"],
+  ["koala","🐨","Koala"],
+  ["tiger","🐯","Hổ"],
+  ["lion","🦁","Sư tử"],
+  ["cow","🐮","Bò"],
+  ["pig","🐷","Heo"],
+  ["mouse","🐭","Chuột"],
+  ["hamster","🐹","Hamster"],
+  ["monkey","🐵","Khỉ"],
+  ["chicken","🐔","Gà"],
+  ["chick","🐥","Gà con"],
 
-["bird","🐦","Chim"],
-["owl","🦉","Cú"],
-["parrot","🦜","Vẹt"],
-["swan","🦢","Thiên nga"],
-["eagle","🦅","Đại bàng"],
-["turkey","🦃","Gà tây"],
-["horse","🐴","Ngựa"],
-["unicorn","🦄","Kỳ lân"],
-["llama","🦙","Lạc đà"],
-["camel","🐫","Lạc đà"],
+  ["bird","🐦","Chim"],
+  ["owl","🦉","Cú"],
+  ["parrot","🦜","Vẹt"],
+  ["swan","🦢","Thiên nga"],
+  ["eagle","🦅","Đại bàng"],
+  ["turkey","🦃","Gà tây"],
+  ["horse","🐴","Ngựa"],
+  ["unicorn","🦄","Kỳ lân"],
+  ["llama","🦙","Lạc đà Alpaca"],
+  ["camel","🐫","Lạc đà"],
 
-["elephant","🐘","Voi"],
-["giraffe","🦒","Hươu cao cổ"],
-["zebra","🦓","Ngựa vằn"],
-["deer","🦌","Nai"],
-["boar","🐗","Lợn rừng"],
-["goat","🐐","Dê"],
-["sheep","🐑","Cừu"],
-["wolf","🐺","Sói"],
-["dragon","🐲","Rồng"],
-["dinosaur","🦖","Khủng long"]
+  ["elephant","🐘","Voi"],
+  ["giraffe","🦒","Hươu cao cổ"],
+  ["zebra","🦓","Ngựa vằn"],
+  ["deer","🦌","Hươu"],
+  ["boar","🐗","Heo rừng"],
+  ["goat","🐐","Dê"],
+  ["sheep","🐑","Cừu"],
+  ["wolf","🐺","Sói"],
+  ["dragon","🐲","Rồng"],
+  ["dinosaur","🦖","Khủng long"]
 
 ];
 
 
-/* =========================================
-  TẠO MENU CON VẬT
-========================================= */
+/* =====================================================
+   TẠO DANH SÁCH NHÂN VẬT
+===================================================== */
 
-const animalBox=
-document.getElementById("animals");
+const animalGrid = document.getElementById("animalGrid");
 
-animals.forEach((a,i)=>{
+let selectedAnimal = animals[0];
 
- const button=
- document.createElement("button");
+animals.forEach((animal,index)=>{
 
- button.className=
- "choice animal";
+  const button = document.createElement("button");
 
- if(i===0)
- button.classList.add("selected");
+  button.className = "animal";
 
- button.dataset.animal=
- a[0];
+  if(index === 0){
+    button.classList.add("selected");
+  }
 
- button.innerHTML=
- `<span class="icon">${a[1]}</span>${a[2]}`;
+  button.innerHTML = `
+    <span class="animal-emoji">${animal[1]}</span>
+    <span class="animal-name">${animal[2]}</span>
+  `;
 
- animalBox.appendChild(button);
+  button.addEventListener("click",()=>{
+
+    document.querySelectorAll(".animal")
+      .forEach(x=>x.classList.remove("selected"));
+
+    button.classList.add("selected");
+
+    selectedAnimal = animal;
+
+    document.getElementById("selectedName").textContent =
+      "Đã chọn: " + animal[1] + " " + animal[2];
+
+  });
+
+  animalGrid.appendChild(button);
 
 });
 
 
-let animal="duck";
-let mode="easy";
-let playerName="Người chơi";
+/* =====================================================
+   ĐỘ KHÓ
+===================================================== */
+
+let selectedDifficulty = "easy";
+
+const difficultyButtons =
+  document.querySelectorAll(".difficulty");
+
+difficultyButtons.forEach(button=>{
+
+  button.addEventListener("click",()=>{
+
+    difficultyButtons.forEach(x=>
+      x.classList.remove("active")
+    );
+
+    button.classList.add("active");
+
+    selectedDifficulty =
+      button.dataset.level;
+
+  });
+
+});
 
 
-/* =========================================
-  CANVAS
-========================================= */
+/* =====================================================
+   CHUYỂN MÀN HÌNH
+===================================================== */
 
-const canvas=
-document.getElementById("game");
+const menuScreen =
+  document.getElementById("menuScreen");
 
-const ctx=
-canvas.getContext("2d");
+const characterScreen =
+  document.getElementById("characterScreen");
 
-function resize(){
+const gameScreen =
+  document.getElementById("gameScreen");
 
- canvas.width=
- innerWidth;
-
- canvas.height=
- innerHeight;
-}
-
-resize();
-
-addEventListener(
- "resize",
- resize
-);
+const gameOver =
+  document.getElementById("gameOver");
 
 
-/* =========================================
-  ĐỘ KHÓ
-========================================= */
+document.getElementById("startButton")
+.addEventListener("click",()=>{
 
-const difficulty={
+  startMusic();
 
- easy:{
-  speed:3.4,
-  gap:215,
-  spawn:2050
- },
+  menuScreen.classList.add("hidden");
 
- normal:{
-  speed:4.3,
-  gap:190,
-  spawn:1750
- },
+  characterScreen.classList.remove("hidden");
 
- hard:{
-  speed:5.3,
-  gap:170,
-  spawn:1500
- }
+});
+
+
+document.getElementById("playButton")
+.addEventListener("click",()=>{
+
+  characterScreen.classList.add("hidden");
+
+  gameScreen.classList.remove("hidden");
+
+  startGame();
+
+});
+
+
+/* =====================================================
+   CANVAS
+===================================================== */
+
+const canvas =
+  document.getElementById("gameCanvas");
+
+const ctx =
+  canvas.getContext("2d");
+
+
+/* =====================================================
+   GAME VARIABLES
+===================================================== */
+
+let playerName = "";
+
+let score = 0;
+
+let bestScore =
+  Number(localStorage.getItem("animalJumpBest")) || 0;
+
+let running = false;
+
+let player = {};
+
+let pipes = [];
+
+let lastPipe = 0;
+
+let animation;
+
+
+/* =====================================================
+   ĐỘ KHÓ
+   KHOẢNG TRỐNG ĐÃ NHỎ HƠN
+===================================================== */
+
+const difficulty = {
+
+  easy:{
+    speed:3.5,
+    gap:175,
+    spawn:1900
+  },
+
+  normal:{
+    speed:4.4,
+    gap:155,
+    spawn:1650
+  },
+
+  hard:{
+    speed:5.3,
+    gap:140,
+    spawn:1450
+  }
 
 };
 
 
-/* =========================================
-  CHỌN CON VẬT
-========================================= */
+/* =====================================================
+   ÂM NHẠC
+===================================================== */
 
-document
-.querySelectorAll(".animal")
-.forEach(b=>{
+let audioContext = null;
 
- b.onclick=()=>{
+let musicOn = true;
 
-  document
-  .querySelectorAll(".animal")
-  .forEach(x=>
-   x.classList.remove("selected")
-  );
+let musicTimer = null;
 
-  b.classList.add("selected");
-
-  animal=
-  b.dataset.animal;
-
- };
-
-});
-
-
-/* =========================================
-  CHỌN ĐỘ KHÓ
-========================================= */
-
-document
-.querySelectorAll(".mode")
-.forEach(b=>{
-
- b.onclick=()=>{
-
-  document
-  .querySelectorAll(".mode")
-  .forEach(x=>
-   x.classList.remove("selected")
-  );
-
-  b.classList.add("selected");
-
-  mode=
-  b.dataset.mode;
-
- };
-
-});
-
-
-/* =========================================
-  GAME
-========================================= */
-
-let playing=false;
-let dead=false;
-
-let score=0;
-
-let pipes=[];
-
-let lastPipe=0;
-
-let best=
-Number(
- localStorage.getItem(
-  "animalJumpBest"
- )
-)||0;
-
-
-const player={
-
- x:170,
- y:300,
-
- w:55,
- h:45,
-
- vy:0
-
-};
-
-
-const gravity=.50;
-const jumpPower=-9;
-
-
-/* =========================================
-  NHẠC BẰNG JAVASCRIPT
-========================================= */
-
-let audio=null;
-let musicOn=false;
-let musicTimer=null;
-
-const musicButton=
-document.getElementById("music");
-
-
-function startMusic(){
-
- if(musicOn)
- return;
-
- audio=
- new AudioContext();
-
- musicOn=true;
-
- musicButton.textContent=
- "🔊 Nhạc: Bật";
-
- playMelody();
-
-}
-
-
-function playMelody(){
-
- if(!musicOn)
- return;
-
- const notes=[
+const notes = [
   261.63,
   329.63,
   392,
@@ -551,802 +663,778 @@ function playMelody(){
   349.23,
   440,
   392
- ];
+];
 
- let i=0;
+let noteIndex = 0;
 
- function note(){
 
-  if(!musicOn)
-  return;
+function startMusic(){
 
-  const osc=
-  audio.createOscillator();
+  if(!musicOn) return;
 
-  const gain=
-  audio.createGain();
+  if(!audioContext){
 
-  osc.frequency.value=
-  notes[i];
+    const AudioCtx =
+      window.AudioContext ||
+      window.webkitAudioContext;
 
-  osc.type=
-  "sine";
+    if(!AudioCtx) return;
 
-  gain.gain.value=
-  .035;
+    audioContext = new AudioCtx();
 
-  osc.connect(gain);
+  }
 
-  gain.connect(
-   audio.destination
-  );
+  if(audioContext.state === "suspended"){
+    audioContext.resume();
+  }
 
-  osc.start();
+  if(musicTimer) return;
 
-  osc.stop(
-   audio.currentTime+.18
-  );
+  musicTimer = setInterval(()=>{
 
-  i=
-  (i+1)%notes.length;
+    if(!audioContext || !musicOn) return;
 
-  musicTimer=
-  setTimeout(
-   note,
-   230
-  );
+    const oscillator =
+      audioContext.createOscillator();
 
- }
+    const gain =
+      audioContext.createGain();
 
- note();
+    oscillator.frequency.value =
+      notes[noteIndex];
+
+    oscillator.type = "sine";
+
+    gain.gain.setValueAtTime(
+      0.035,
+      audioContext.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      audioContext.currentTime + 0.35
+    );
+
+    oscillator.connect(gain);
+
+    gain.connect(audioContext.destination);
+
+    oscillator.start();
+
+    oscillator.stop(
+      audioContext.currentTime + 0.35
+    );
+
+    noteIndex++;
+
+    if(noteIndex >= notes.length){
+      noteIndex = 0;
+    }
+
+  },430);
 
 }
 
 
-function stopMusic(){
+/* =====================================================
+   NÚT NHẠC
+===================================================== */
 
- musicOn=false;
+document.getElementById("musicBtn")
+.addEventListener("click",(e)=>{
 
- if(musicTimer)
- clearTimeout(musicTimer);
+  musicOn = !musicOn;
 
- if(audio)
- audio.close();
+  e.target.textContent =
+    musicOn ? "🔊" : "🔇";
 
- musicButton.textContent=
- "🔇 Nhạc: Tắt";
+  if(musicOn){
+
+    startMusic();
+
+  }else{
+
+    clearInterval(musicTimer);
+
+    musicTimer = null;
+
+  }
+
+});
+
+
+/* =====================================================
+   BẮT ĐẦU GAME
+===================================================== */
+
+function startGame(){
+
+  playerName =
+    document.getElementById("playerName")
+      .value.trim();
+
+  if(!playerName){
+    playerName = "Người chơi";
+  }
+
+  score = 0;
+
+  pipes = [];
+
+  lastPipe = 0;
+
+  running = true;
+
+  gameOver.classList.add("hidden");
+
+  document.getElementById("score")
+    .textContent = "0";
+
+  player = {
+
+    x:85,
+
+    y:canvas.height/2,
+
+    velocity:0,
+
+    gravity:0.42,
+
+    jump:-7.5,
+
+    size:42
+
+  };
+
+  startMusic();
+
+  cancelAnimationFrame(animation);
+
+  animation =
+    requestAnimationFrame(gameLoop);
 
 }
 
 
-musicButton.onclick=()=>{
-
- if(musicOn)
- stopMusic();
-
- else
- startMusic();
-
-};
-
-
-/* =========================================
-  BẮT ĐẦU
-========================================= */
-
-document
-.getElementById("start")
-.onclick=()=>{
-
- playerName=
- document
- .getElementById("playerName")
- .value
- .trim();
-
- if(!playerName)
- playerName="Người chơi";
-
-
- /* trình duyệt cho phép nhạc
-    sau khi người dùng bấm */
-
- if(!musicOn)
- startMusic();
-
-
- playing=true;
- dead=false;
-
- score=0;
-
- pipes=[];
-
- player.y=
- canvas.height/2;
-
- player.vy=0;
-
- lastPipe=
- performance.now();
-
- document
- .getElementById("score")
- .textContent="0";
-
- document
- .getElementById("playerLabel")
- .textContent=
- "👤 "+playerName;
-
- document
- .getElementById("menu")
- .style.display="none";
-
- document
- .getElementById("over")
- .style.display="none";
-
-};
-
-
-/* =========================================
-  NHẢY
-========================================= */
+/* =====================================================
+   NHẢY
+===================================================== */
 
 function jump(){
 
- if(!playing || dead)
- return;
+  if(!running) return;
 
- player.vy=
- jumpPower;
+  player.velocity =
+    player.jump;
 
 }
 
-addEventListener(
- "keydown",
- e=>{
 
-  if(e.code==="Space"){
+/* =====================================================
+   BÀN PHÍM
+===================================================== */
 
-   e.preventDefault();
+document.addEventListener("keydown",(e)=>{
 
-   jump();
+  if(e.code === "Space"){
+
+    e.preventDefault();
+
+    jump();
 
   }
 
- }
-);
+});
+
+
+/* =====================================================
+   CHẠM / CLICK
+===================================================== */
+
+canvas.addEventListener("mousedown",jump);
 
 canvas.addEventListener(
- "pointerdown",
- jump
+  "touchstart",
+  (e)=>{
+    e.preventDefault();
+    jump();
+  },
+  {passive:false}
 );
 
 
-/* =========================================
-  TẠO CỘT
-========================================= */
+/* =====================================================
+   TẠO CỘT
+===================================================== */
 
 function createPipe(){
 
- const d=
- difficulty[mode];
+  const d =
+    difficulty[selectedDifficulty];
 
- const ground=
- canvas.height-65;
+  const minTop = 80;
 
- /*
-   Khe được giới hạn để:
-   - Không quá lớn
-   - Không quá nhỏ
- */
+  const maxTop =
+    canvas.height -
+    d.gap -
+    130;
 
- const topMin=100;
+  const top =
+    Math.random() *
+    (maxTop - minTop) +
+    minTop;
 
- const topMax=
- Math.max(
-  topMin,
-  ground-d.gap-100
- );
+  pipes.push({
 
- const top=
- topMin+
- Math.random()*
- (topMax-topMin);
+    x:canvas.width,
 
+    width:62,
 
- pipes.push({
+    top:top,
 
-  x:
-  canvas.width+100,
+    gap:d.gap,
 
-  w:86,
+    passed:false
 
-  top:top,
-
-  bottom:
-  top+d.gap,
-
-  passed:false
-
- });
+  });
 
 }
 
 
-/* =========================================
-  UPDATE
-========================================= */
+/* =====================================================
+   GAME LOOP
+===================================================== */
 
-function update(time){
+function gameLoop(time){
 
- if(!playing || dead)
- return;
+  if(!running) return;
 
+  const d =
+    difficulty[selectedDifficulty];
 
- const d=
- difficulty[mode];
+  update(time,d);
 
+  draw();
 
- player.vy+=
- gravity;
+  animation =
+    requestAnimationFrame(gameLoop);
 
- player.y+=
- player.vy;
-
-
- if(
-  time-lastPipe>
-  d.spawn
- ){
-
-  createPipe();
-
-  lastPipe=time;
-
- }
+}
 
 
- for(
-  const p of pipes
- ){
+/* =====================================================
+   UPDATE
+===================================================== */
 
-  p.x-=
-  d.speed;
+function update(time,d){
 
+  player.velocity +=
+    player.gravity;
 
-  const px=
-  player.x+8;
-
-  const py=
-  player.y+7;
-
-  const pw=
-  player.w-16;
-
-  const ph=
-  player.h-12;
+  player.y +=
+    player.velocity;
 
 
-  const hitX=
-  px+pw>p.x &&
-  px<p.x+p.w;
-
-
-  const hitTop=
-  py<p.top;
-
-  const hitBottom=
-  py+ph>p.bottom;
-
+  /* Tạo cột */
 
   if(
-   hitX &&
-   (hitTop||hitBottom)
+    !lastPipe ||
+    time - lastPipe > d.spawn
   ){
 
-   endGame();
+    createPipe();
+
+    lastPipe = time;
 
   }
 
 
+  /* Di chuyển cột */
+
+  pipes.forEach(pipe=>{
+
+    pipe.x -= d.speed;
+
+  });
+
+
+  /* Xóa cột */
+
+  pipes =
+    pipes.filter(pipe =>
+      pipe.x + pipe.width > -20
+    );
+
+
+  /* Điểm */
+
+  pipes.forEach(pipe=>{
+
+    if(
+      !pipe.passed &&
+      pipe.x + pipe.width < player.x
+    ){
+
+      pipe.passed = true;
+
+      score++;
+
+      document.getElementById("score")
+        .textContent = score;
+
+    }
+
+  });
+
+
+  /* Va chạm */
+
   if(
-   !p.passed &&
-   p.x+p.w<
-   player.x
+    player.y - player.size/2 <= 0 ||
+    player.y + player.size/2 >= canvas.height - 55
   ){
 
-   p.passed=true;
+    endGame();
 
-   score++;
-
-   document
-   .getElementById("score")
-   .textContent=
-   score;
+    return;
 
   }
 
- }
+
+  for(const pipe of pipes){
+
+    const playerLeft =
+      player.x - player.size/2;
+
+    const playerRight =
+      player.x + player.size/2;
+
+    const playerTop =
+      player.y - player.size/2;
+
+    const playerBottom =
+      player.y + player.size/2;
 
 
- pipes=
- pipes.filter(
-  p=>p.x>-150
- );
+    const pipeLeft =
+      pipe.x;
+
+    const pipeRight =
+      pipe.x + pipe.width;
 
 
- if(player.y<0)
- endGame();
+    const hitX =
+      playerRight > pipeLeft &&
+      playerLeft < pipeRight;
 
 
- if(
-  player.y+
-  player.h>
-  canvas.height-65
- )
- endGame();
+    const hitTop =
+      playerTop < pipe.top;
 
-}
+    const hitBottom =
+      playerBottom >
+      pipe.top + pipe.gap;
 
 
-/* =========================================
-  GAME OVER
-========================================= */
+    if(
+      hitX &&
+      (hitTop || hitBottom)
+    ){
 
-function endGame(){
+      endGame();
 
- if(dead)
- return;
+      return;
 
- dead=true;
- playing=false;
+    }
 
-
- if(score>best){
-
-  best=score;
-
-  localStorage.setItem(
-   "animalJumpBest",
-   best
-  );
-
- }
-
-
- document
- .getElementById("result")
- .innerHTML=
- `
- 👤 ${playerName}<br>
- 🐾 ${animals.find(a=>a[0]===animal)?.[2]||""}<br>
- 🏆 Điểm: <b>${score}</b><br>
- ⭐ Kỷ lục: <b>${best}</b>
- `;
-
-
- document
- .getElementById("over")
- .style.display="flex";
+  }
 
 }
 
 
-/* =========================================
-  VỀ MENU
-========================================= */
-
-document
-.getElementById("again")
-.onclick=()=>{
-
- document
- .getElementById("over")
- .style.display="none";
-
- document
- .getElementById("menu")
- .style.display="flex";
-
- pipes=[];
-
- score=0;
-
- document
- .getElementById("score")
- .textContent="0";
-
- document
- .getElementById("playerLabel")
- .textContent="";
-
-};
-
-
-/* =========================================
-  NỀN
-========================================= */
-
-function background(){
-
- const sky=
- ctx.createLinearGradient(
-  0,0,
-  0,canvas.height
- );
-
- sky.addColorStop(
-  0,
-  "#55bfe3"
- );
-
- sky.addColorStop(
-  1,
-  "#d9f7ff"
- );
-
- ctx.fillStyle=sky;
-
- ctx.fillRect(
-  0,0,
-  canvas.width,
-  canvas.height
- );
-
-
- /* mặt trời */
-
- ctx.fillStyle="#ffe47a";
-
- ctx.beginPath();
-
- ctx.arc(
-  canvas.width-100,
-  90,
-  42,
-  0,
-  Math.PI*2
- );
-
- ctx.fill();
-
-
- cloud(
-  130,
-  100,
-  30
- );
-
- cloud(
-  canvas.width*.55,
-  145,
-  27
- );
-
-}
-
-
-function cloud(x,y,s){
-
- ctx.fillStyle=
- "rgba(255,255,255,.8)";
-
- ctx.beginPath();
-
- ctx.arc(
-  x,y,s,
-  0,Math.PI*2
- );
-
- ctx.arc(
-  x+s,
-  y-8,
-  s*.75,
-  0,Math.PI*2
- );
-
- ctx.arc(
-  x+s*2,
-  y,
-  s,
-  0,Math.PI*2
- );
-
- ctx.fill();
-
-}
-
-
-/* =========================================
-  CỘT ĐẸP
-========================================= */
-
-function drawPipe(p){
-
- const x=p.x;
- const w=p.w;
-
-
- const g=
- ctx.createLinearGradient(
-  x,0,
-  x+w,0
- );
-
- g.addColorStop(
-  0,
-  "#125b29"
- );
-
- g.addColorStop(
-  .25,
-  "#2d9e42"
- );
-
- g.addColorStop(
-  .5,
-  "#5acb61"
- );
-
- g.addColorStop(
-  .75,
-  "#2c9b41"
- );
-
- g.addColorStop(
-  1,
-  "#0c5225"
- );
-
-
- ctx.fillStyle=g;
-
-
- /* thân trên */
-
- ctx.fillRect(
-  x,0,
-  w,p.top
- );
-
-
- /* thân dưới */
-
- ctx.fillRect(
-  x,p.bottom,
-  w,
-  canvas.height-p.bottom
- );
-
-
- /* đầu cột */
-
- ctx.fillStyle=
- "#45b953";
-
-
- ctx.fillRect(
-  x-8,
-  p.top-28,
-  w+16,
-  28
- );
-
-
- ctx.fillRect(
-  x-8,
-  p.bottom,
-  w+16,
-  28
- );
-
-
- /* viền */
-
- ctx.strokeStyle=
- "#104e25";
-
- ctx.lineWidth=4;
-
-
- ctx.strokeRect(
-  x,0,
-  w,p.top
- );
-
- ctx.strokeRect(
-  x,p.bottom,
-  w,
-  canvas.height-p.bottom
- );
-
-
- ctx.strokeRect(
-  x-8,
-  p.top-28,
-  w+16,
-  28
- );
-
- ctx.strokeRect(
-  x-8,
-  p.bottom,
-  w+16,
-  28
- );
-
-
- /* ánh sáng */
-
- ctx.fillStyle=
- "rgba(255,255,255,.18)";
-
- ctx.fillRect(
-  x+12,
-  0,
-  7,
-  p.top
- );
-
- ctx.fillRect(
-  x+12,
-  p.bottom,
-  7,
-  canvas.height
- );
-
-}
-
-
-/* =========================================
-  NHÂN VẬT
-========================================= */
-
-function drawPlayer(){
-
- const emoji=
- animals.find(
-  a=>a[0]===animal
- )?.[1] || "🦆";
-
-
- /*
-   Dùng emoji cho 40 con vật.
-   Canvas tự vẽ emoji nên không bị
-   ngược như ảnh cũ.
- */
-
- ctx.font=
- "48px Arial";
-
- ctx.textAlign=
- "center";
-
- ctx.textBaseline=
- "middle";
-
- ctx.fillText(
-  emoji,
-  player.x+player.w/2,
-  player.y+player.h/2
- );
-
-}
-
-
-/* =========================================
-  ĐẤT
-========================================= */
-
-function ground(){
-
- const y=
- canvas.height-65;
-
-
- ctx.fillStyle=
- "#73c94c";
-
- ctx.fillRect(
-  0,y,
-  canvas.width,
-  65
- );
-
-
- ctx.fillStyle=
- "#a0dd59";
-
- for(
-  let x=0;
-  x<canvas.width;
-  x+=18
- ){
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-   x,y
-  );
-
-  ctx.lineTo(
-   x+6,y-8
-  );
-
-  ctx.lineTo(
-   x+12,y
-  );
-
-  ctx.fill();
-
- }
-
-
- ctx.fillStyle=
- "#a97543";
-
- ctx.fillRect(
-  0,
-  canvas.height-18,
-  canvas.width,
-  18
- );
-
-}
-
-
-/* =========================================
-  DRAW
-========================================= */
+/* =====================================================
+   VẼ GAME
+===================================================== */
 
 function draw(){
 
- background();
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
 
- for(
-  const p of pipes
- ){
 
-  drawPipe(p);
+  /* BẦU TRỜI */
 
- }
+  const sky =
+    ctx.createLinearGradient(
+      0,0,
+      0,canvas.height
+    );
 
- ground();
+  sky.addColorStop(
+    0,
+    "#87d8ff"
+  );
 
- if(
-  playing ||
-  dead
- ){
+  sky.addColorStop(
+    1,
+    "#e8faff"
+  );
+
+  ctx.fillStyle = sky;
+
+  ctx.fillRect(
+    0,0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  /* MÂY */
+
+  drawCloud(70,90,1);
+
+  drawCloud(270,150,.8);
+
+  drawCloud(160,260,.6);
+
+
+  /* CỘT */
+
+  pipes.forEach(drawPipe);
+
+
+  /* MẶT ĐẤT */
+
+  ctx.fillStyle = "#78c850";
+
+  ctx.fillRect(
+    0,
+    canvas.height-55,
+    canvas.width,
+    55
+  );
+
+  ctx.fillStyle = "#5fa63b";
+
+  ctx.fillRect(
+    0,
+    canvas.height-55,
+    canvas.width,
+    8
+  );
+
+
+  /* NHÂN VẬT */
 
   drawPlayer();
 
- }
+}
+
+
+/* =====================================================
+   VẼ MÂY
+===================================================== */
+
+function drawCloud(x,y,s){
+
+  ctx.save();
+
+  ctx.translate(x,y);
+
+  ctx.scale(s,s);
+
+  ctx.fillStyle =
+    "rgba(255,255,255,.8)";
+
+  ctx.beginPath();
+
+  ctx.arc(0,10,22,0,Math.PI*2);
+
+  ctx.arc(25,5,28,0,Math.PI*2);
+
+  ctx.arc(55,12,20,0,Math.PI*2);
+
+  ctx.fill();
+
+  ctx.restore();
 
 }
 
 
-/* =========================================
-  GAME LOOP
-========================================= */
+/* =====================================================
+   VẼ CỘT
+===================================================== */
 
-function loop(time){
+function drawPipe(pipe){
 
- update(time);
+  const bottomStart =
+    pipe.top + pipe.gap;
 
- draw();
 
- requestAnimationFrame(
-  loop
- );
+  /* Cột trên */
+
+  const topGradient =
+    ctx.createLinearGradient(
+      pipe.x,
+      0,
+      pipe.x + pipe.width,
+      0
+    );
+
+  topGradient.addColorStop(
+    0,
+    "#2e8b36"
+  );
+
+  topGradient.addColorStop(
+    .5,
+    "#63c75c"
+  );
+
+  topGradient.addColorStop(
+    1,
+    "#23752c"
+  );
+
+  ctx.fillStyle =
+    topGradient;
+
+  ctx.fillRect(
+    pipe.x,
+    0,
+    pipe.width,
+    pipe.top
+  );
+
+
+  /* Viền */
+
+  ctx.strokeStyle =
+    "#1c6425";
+
+  ctx.lineWidth = 3;
+
+  ctx.strokeRect(
+    pipe.x,
+    0,
+    pipe.width,
+    pipe.top
+  );
+
+
+  /* Đầu cột trên */
+
+  ctx.fillStyle =
+    "#55b94d";
+
+  ctx.fillRect(
+    pipe.x - 7,
+    pipe.top - 22,
+    pipe.width + 14,
+    22
+  );
+
+  ctx.strokeRect(
+    pipe.x - 7,
+    pipe.top - 22,
+    pipe.width + 14,
+    22
+  );
+
+
+  /* Cột dưới */
+
+  ctx.fillStyle =
+    topGradient;
+
+  ctx.fillRect(
+    pipe.x,
+    bottomStart,
+    pipe.width,
+    canvas.height - bottomStart
+  );
+
+
+  ctx.strokeRect(
+    pipe.x,
+    bottomStart,
+    pipe.width,
+    canvas.height - bottomStart
+  );
+
+
+  /* Đầu cột dưới */
+
+  ctx.fillStyle =
+    "#55b94d";
+
+  ctx.fillRect(
+    pipe.x - 7,
+    bottomStart,
+    pipe.width + 14,
+    22
+  );
+
+  ctx.strokeRect(
+    pipe.x - 7,
+    bottomStart,
+    pipe.width + 14,
+    22
+  );
+
+
+  /* Ánh sáng */
+
+  ctx.fillStyle =
+    "rgba(255,255,255,.18)";
+
+  ctx.fillRect(
+    pipe.x + 9,
+    0,
+    7,
+    pipe.top
+  );
+
+  ctx.fillRect(
+    pipe.x + 9,
+    bottomStart,
+    7,
+    canvas.height-bottomStart
+  );
 
 }
 
-requestAnimationFrame(
- loop
-);
+
+/* =====================================================
+   VẼ NHÂN VẬT
+===================================================== */
+
+function drawPlayer(){
+
+  ctx.save();
+
+  ctx.font =
+    player.size + "px Arial";
+
+  ctx.textAlign =
+    "center";
+
+  ctx.textBaseline =
+    "middle";
+
+  ctx.shadowColor =
+    "rgba(0,0,0,.2)";
+
+  ctx.shadowBlur = 5;
+
+  ctx.fillText(
+    selectedAnimal[1],
+    player.x,
+    player.y
+  );
+
+  ctx.restore();
+
+}
+
+
+/* =====================================================
+   GAME OVER
+===================================================== */
+
+function endGame(){
+
+  if(!running) return;
+
+  running = false;
+
+  cancelAnimationFrame(animation);
+
+
+  if(score > bestScore){
+
+    bestScore = score;
+
+    localStorage.setItem(
+      "animalJumpBest",
+      bestScore
+    );
+
+  }
+
+
+  document.getElementById("finalScore")
+    .textContent = score;
+
+  document.getElementById("bestScore")
+    .textContent = bestScore;
+
+  document.getElementById("resultAnimal")
+    .textContent = selectedAnimal[1];
+
+  document.getElementById("resultText")
+    .innerHTML =
+      `<b>${playerName}</b> đã chơi với ${selectedAnimal[2]}`;
+
+
+  gameOver.classList.remove("hidden");
+
+}
+
+
+/* =====================================================
+   CHƠI LẠI
+===================================================== */
+
+document.getElementById("retryButton")
+.addEventListener("click",()=>{
+
+  gameOver.classList.add("hidden");
+
+  startGame();
+
+});
+
+
+/* =====================================================
+   ĐỔI NHÂN VẬT
+===================================================== */
+
+document.getElementById("characterAgainButton")
+.addEventListener("click",()=>{
+
+  gameOver.classList.add("hidden");
+
+  gameScreen.classList.add("hidden");
+
+  characterScreen.classList.remove("hidden");
+
+});
+
+
+/* =====================================================
+   VỀ MENU
+===================================================== */
+
+document.getElementById("menuButton")
+.addEventListener("click",()=>{
+
+  running = false;
+
+  cancelAnimationFrame(animation);
+
+  gameOver.classList.add("hidden");
+
+  gameScreen.classList.add("hidden");
+
+  menuScreen.classList.remove("hidden");
+
+});
+
 
 </script>
 
