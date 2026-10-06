@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦆 Duck Jump</title>
+
+<style>
+    body {
+        margin: 0;
+        background: #87CEEB;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+    }
+
+    canvas {
+        display: block;
+        margin: auto;
+        background: linear-gradient(#87CEEB, #dff7ff);
+    }
+
+    #info {
+        position: fixed;
+        top: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 28px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px #333;
+    }
+</style>
+</head>
+
+<body>
+
+<div id="info">Điểm: <span id="score">0</span></div>
+
+<canvas id="game" width="900" height="500"></canvas>
+
+<script>
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let duck = {
+    x: 150,
+    y: 250,
+    size: 35,
+    velocity: 0
+};
+
+let gravity = 0.5;
+let jumpPower = -9;
+
+let pipes = [];
+let score = 0;
+let gameOver = false;
+
+function jump() {
+    if (gameOver) {
+        location.reload();
+        return;
+    }
+
+    duck.velocity = jumpPower;
+}
+
+document.addEventListener("keydown", e => {
+    if (e.code === "Space") {
+        jump();
+    }
+});
+
+canvas.addEventListener("click", jump);
+
+function createPipe() {
+
+    let gap = 150;
+    let topHeight = Math.random() * 220 + 50;
+
+    pipes.push({
+        x: canvas.width,
+        top: topHeight,
+        bottom: topHeight + gap,
+        width: 70,
+        passed: false
+    });
+}
+
+setInterval(createPipe, 1800);
+
+function update() {
+
+    if (gameOver) return;
+
+    duck.velocity += gravity;
+    duck.y += duck.velocity;
+
+    for (let pipe of pipes) {
+
+        pipe.x -= 4;
+
+        // Va chạm cột
+        if (
+            duck.x + duck.size > pipe.x &&
+            duck.x < pipe.x + pipe.width &&
+            (
+                duck.y < pipe.top ||
+                duck.y + duck.size > pipe.bottom
+            )
+        ) {
+            gameOver = true;
+        }
+
+        // Tính điểm
+        if (!pipe.passed && pipe.x + pipe.width < duck.x) {
+            pipe.passed = true;
+            score++;
+            document.getElementById("score").textContent = score;
+        }
+    }
+
+    pipes = pipes.filter(pipe => pipe.x > -100);
+
+    if (
+        duck.y < 0 ||
+        duck.y + duck.size > canvas.height
+    ) {
+        gameOver = true;
+    }
+}
+
+function draw() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Mặt đất
+    ctx.fillStyle = "#6bc34a";
+    ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
+
+    // Vịt
+    ctx.font = "40px Arial";
+    ctx.fillText("🦆", duck.x, duck.y + duck.size);
+
+    // Cột
+    for (let pipe of pipes) {
+
+        ctx.fillStyle = "#29963c";
+
+        ctx.fillRect(
+            pipe.x,
+            0,
+            pipe.width,
+            pipe.top
+        );
+
+        ctx.fillRect(
+            pipe.x,
+            pipe.bottom,
+            pipe.width,
+            canvas.height - pipe.bottom
+        );
+    }
+
+    // Game Over
+    if (gameOver) {
+
+        ctx.fillStyle = "rgba(0,0,0,0.5)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+
+        ctx.font = "50px Arial";
+        ctx.fillText(
+            "GAME OVER",
+            canvas.width / 2,
+            220
+        );
+
+        ctx.font = "25px Arial";
+        ctx.fillText(
+            "Bấm Space hoặc click để chơi lại",
+            canvas.width / 2,
+            270
+        );
+
+        ctx.textAlign = "left";
+    }
+}
+
+function gameLoop() {
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+
+</script>
+
+</body>
+</html>
